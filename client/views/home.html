@@ -1,0 +1,24 @@
+
+<template name="pageBack">
+<div id="fullHomeBack" style="background: url('{{this}}') no-repeat"></div>
+</template>
+
+<template name="home">
+{{>pageBack '/images/home.jpg'}}
+<div class="container titleContainer">
+  <div class="row-fluid">
+    <div class="span12">
+      <div class="description-texts">
+        <h1 class="site-slogan"><span>DOTA 2 1v1 MATCHMAKING</span></h1>
+
+        <p class="app-description">
+        <span>Practice solo mid tactics against real opponents.</span><br>
+        <span>Play with players at the same skill level.</span><br>
+        <span>Climb the leaderboard and show off your skills.</span><br>
+        </p>
+        <a class="btn btn-success" href="{{pathFor 'modlist'}}">Start Playing!</a>
+      </div>
+    </div>
+  </div>
+</div>
+</template>

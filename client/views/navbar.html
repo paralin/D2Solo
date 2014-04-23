@@ -1,0 +1,40 @@
+<head>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800" rel="stylesheet" type="text/css" />
+</head>
+<template name="navbar">
+<div class="loginButtonContainer">
+  <ul class="nav navbar-nav navbar-right">
+    {{>_loginButtons align="right"}}
+  </ul>
+</div>
+<header id="topNav">
+  <div class="container">
+    <a href="/" class="logo">
+      <img src="/images/logo.png" alt="D2SOLO" />
+    </a>
+    <div class="pull-right" style="position:fixed;top:25px;right:100px">
+      <nav class="nav-main mega-menu">
+        <ul class="nav nav-pills nav-main scroll-menu" id="topMain">
+          <li>
+          <a href={{pathFor 'matchmaking'}} class={{ar "matchmaking"}}>
+            Matchmaking
+          </a>
+          </li>
+          <li>
+          <a href={{pathFor 'leaderboards'}} class={{ar "leaderboards"}}>
+            Leaderboards
+          </a>
+          </li>
+          <li>
+          <a href={{pathFor 'profile'}} class={{ar "profile"}}>
+            Profile
+          </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<span id="header_shadow" style="pointer-events:none"></span>
+</template>

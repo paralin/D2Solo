@@ -1,0 +1,34 @@
+#styledPage {
+	text-align:left;
+	position:relative;
+	border:0;
+  margin: 0;
+}
+#styledPage h2 a {
+	text-decoration:none;
+}
+#styledPage div.left {
+	padding-right:50px;
+}
+header#page-title h1, header#page-title h2 {
+  color: #2d2f3c;
+}
+
+.breadcrumb {
+  font-size: 13px;
+  margin: -3px 0 0;
+  padding: 0;
+  position: relative;
+  display: inline-block;
+  background: none;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.breadcrumb>li {
+  display: inline-block;
+}
+p, ol li, ul li {
+  color: #7e8998;
+}
+

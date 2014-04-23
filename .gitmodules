@@ -1,0 +1,3 @@
+[submodule "packages/iron-router-progress"]
+	path = packages/iron-router-progress
+	url = https://github.com/tmeasday/iron-router-progress.git

@@ -19,10 +19,10 @@
       "git": "https://github.com/kidovate/meteor-steam.git",
       "branch": "master"
     },
-    "accounts-steam":
-    {
+    "accounts-steam": {
       "git": "https://github.com/kidovate/meteor-accounts-steam.git",
       "branch": "master"
-    }
+    },
+    "bootstrap-slider": {}
   }
 }

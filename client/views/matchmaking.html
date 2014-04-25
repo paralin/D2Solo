@@ -1,0 +1,37 @@
+<template name="matchmaking">
+{{>pageBack '/images/io.jpg'}}
+
+<div class="container wrapper">
+  <div class="row-fluid">
+    <div class="span12">
+      <div class="description-texts">
+        <h1 class="site-slogan"><span style="line-height:0">Find a Match</span></h1>
+      </div>
+    </div>
+  </div>
+  <div class="row-fluid" style="padding-left:2%;padding-right:2%">
+    <div class="col-sm-4 desc-box">
+      <h4 class="page-header">Queuing</h4>
+      <p>
+        The system will search for another player within your desired skill range. Skill is determined by your Dota 2 solo MMR, and is then updated by your wins and losses on d2solo.
+      </p>
+      <p>
+        Select a queue range:
+      </p>
+      <input id="queueRangeSlider" style="width:100%" />
+    </div>
+    <div class="col-sm-2 center-block" style="float:none;text-align:center">
+      <a class="btn btn-success">Start Queuing</a>
+    </div>
+    <div class="col-sm-4 desc-box" style="float:right;position:relative;top:-34px">
+      <h4 class="page-header">Joining the Match</h4>
+      <p>
+        Once your matchup is found, you will be asked to accept. After accepting, a bot will create an ingame lobby for you with a generated password phrase. You can then join the lobby by going to Play - Find Lobby - Private Lobbies - and enter the password to find the lobby.
+      </p>
+      <p>
+        You can also add the bot as a friend to see the lobby in your friends' lobbies list.
+      </p>
+    </div>
+  </div>
+</div>
+</template>

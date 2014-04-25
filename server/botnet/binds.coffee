@@ -66,3 +66,10 @@
     return res.result
   d.on 'ready', ->
     log "Dota client ready."
+    d.createPracticeLobby "Test Lobby", "test", Dota2.ServerRegion.USWEST, Dota2.GameMode.DOTA_GAMEMODE_MO, (err, res)->
+      log "created test lobby, configuring"
+      d.configPracticeLobby
+        game_name: "Configured Test"
+      , (err, res)->
+        console.log err
+        console.log res

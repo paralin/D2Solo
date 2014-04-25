@@ -29,7 +29,7 @@
       }
     },
     "dota2": {
-      "version": "0.4.6",
+      "version": "https://github.com/kidovate/node-dota2/tarball/cad392f067e0dfdb1d8b4e1e8d5b0dd4e0337800",
       "dependencies": {
         "protobuf": {
           "version": "0.8.7"

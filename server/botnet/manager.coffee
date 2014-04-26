@@ -2,6 +2,9 @@
 @Dota2 = Meteor.require "dota2"
 @Fiber = Meteor.require "fibers"
 
+@AccountID = (steamID)->
+  Dota2.Dota2Client::ToAccountID(steamID)
+
 @rmeteor = (fcn)->
   new Fiber(fcn).run()
 

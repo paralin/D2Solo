@@ -29,7 +29,7 @@
       }
     },
     "dota2": {
-      "version": "https://github.com/kidovate/node-dota2/tarball/cad392f067e0dfdb1d8b4e1e8d5b0dd4e0337800",
+      "version": "https://github.com/kidovate/node-dota2/tarball/9e5ba15e8526d64606e48697f04b6dae421d9a60",
       "dependencies": {
         "protobuf": {
           "version": "0.8.7"
@@ -47,6 +47,17 @@
               "version": "0.2.2"
             }
           }
+        },
+        "bignumber.js": {
+          "version": "1.3.0"
+        }
+      }
+    },
+    "steamidconvert": {
+      "version": "0.2.2",
+      "dependencies": {
+        "bignumber.js": {
+          "version": "1.0.1"
         }
       }
     }

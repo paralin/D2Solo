@@ -23,6 +23,7 @@
       "git": "https://github.com/kidovate/meteor-accounts-steam.git",
       "branch": "master"
     },
-    "bootstrap-slider": {}
+    "bootstrap-slider": {},
+    "steamtracks": {}
   }
 }

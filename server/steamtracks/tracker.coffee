@@ -19,24 +19,26 @@ Router.map ->
     where: 'server'
     path: 'steamtracks/callback'
     action: ->
+      @response.writeHead 200, {'Content-Type': 'text/html'}
       token = @params.token
       if !token?
-        @response.writeHead 200, {'Content-Type': 'text/html'}
         @response.end "You need a token to complete this request."
         return
       t = STracksTokens.findOne _id:token
       if !t?
         @response.end "Invalid token."
         return
+      console.log "Finalizing SteamTracks signup for "+token
       user = Meteor.users.findOne _id:t.user
       info = STracks.ackSignupFinish token
+      console.log info
       status = STracks.getSignupStatus token
+      console.log status
       if status.status is "declined"
         STracksTokens.remove _id: token
         @response.end "You have delined the steamtracks request."
         return
       if status.status isnt "accepted"
-        @response.writeHead 200, {'Content-Type': 'text/html'}
         @response.end "The signup process isn't finished yet (token pending still)."
         return
       delete user.steamtracks['token']

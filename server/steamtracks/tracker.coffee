@@ -62,13 +62,18 @@ Meteor.methods
       if !user.steamtracks.token?
         generateSTracksToken user
       else
-        status = STracks.getSignupStatus user.steamtracks.token
-        console.log status
-        if status.status is "declined"
-          generateSTracksToken user
-        if status.status is "accepted"
-          user.steamtracks.authorized = true
-          Meteor.users.update({_id: user._id}, {$set: {steamtracks: user.steamtracks}})
-          return false
+        status = null
+        try
+          status = STracks.getSignupStatus user.steamtracks.token
+          console.log status
+        catch e
+          status = null
+        finally
+          if !status? || status.status is "declined"
+            generateSTracksToken user
+          else if status.status is "accepted"
+            user.steamtracks.authorized = true
+            Meteor.users.update({_id: user._id}, {$set: {steamtracks: user.steamtracks}})
+            return false
       return "https://steamtracks.com/appauth/"+user.steamtracks.token
     return false

@@ -1,6 +1,6 @@
 if Meteor.isServer
   Meteor.startup ->
-    SeoCollection.remove()
+    SeoCollection.remove({})
     stdog =
       'title': 'Dota 2 Solo Matchmaking',
       'image': 'http://d2modd.in/images/D2Logo.png'

@@ -1,0 +1,124 @@
+{
+  "meteor": {},
+  "dependencies": {
+    "basePackages": {
+      "bootstrap-3": {},
+      "user-status": {},
+      "pnotify": {},
+      "dota2": {},
+      "font-awesome": {},
+      "iron-router-progress": {},
+      "iron-router": {},
+      "accounts-ui-bootstrap-3": {
+        "git": "https://github.com/kidovate/meteor-accounts-ui-bootstrap-3.git",
+        "branch": "steam"
+      },
+      "blaze-layout": {},
+      "ms-seo": {},
+      "sitemaps": {},
+      "authorization": {},
+      "steam": {
+        "git": "https://github.com/kidovate/meteor-steam.git",
+        "branch": "master"
+      },
+      "accounts-steam": {
+        "git": "https://github.com/kidovate/meteor-accounts-steam.git",
+        "branch": "master"
+      },
+      "bootstrap-slider": {},
+      "steamtracks": {
+        "path": "../steamtracks"
+      }
+    },
+    "packages": {
+      "bootstrap-3": {
+        "git": "https://github.com/mangasocial/meteor-bootstrap-3.git",
+        "tag": "v3.1.1-1",
+        "commit": "63dd38968828bb8963636df93e9a1c45e2dfe67e"
+      },
+      "user-status": {
+        "git": "https://github.com/mizzao/meteor-user-status.git",
+        "tag": "v0.3.5",
+        "commit": "d325a3ab62742659e195085ead76b1ed736aab35"
+      },
+      "pnotify": {
+        "git": "https://github.com/kidovate/meteor-pnotify.git",
+        "tag": "v2.0.6",
+        "commit": "cbd0bb220d03b20b247e4a6a7bdfc3d2c8064216"
+      },
+      "dota2": {
+        "git": "https://github.com/kidovate/meteor-dota2.git",
+        "tag": "v0.0.5",
+        "commit": "9d25efc0b0d25b8f01f769608f3582ebc8e3094a"
+      },
+      "font-awesome": {
+        "git": "https://github.com/nate-strauser/meteor-font-awesome.git",
+        "tag": "v4.0.3",
+        "commit": "61e9361384347547ae144f8228faa4deffda23db"
+      },
+      "iron-router-progress": {
+        "git": "https://github.com/Multiply/iron-router-progress.git",
+        "tag": "v0.3.1",
+        "commit": "3f7900feb4bb70a1289b39a1fdcd1f438c0335b3"
+      },
+      "iron-router": {
+        "git": "https://github.com/EventedMind/iron-router.git",
+        "tag": "v0.7.1",
+        "commit": "d1ffb3f06ea4c112132b030f2eb1a70b81675ecb"
+      },
+      "accounts-ui-bootstrap-3": {
+        "git": "https://github.com/kidovate/meteor-accounts-ui-bootstrap-3.git",
+        "branch": "steam",
+        "commit": "bbcd146a4b9321555d98c4affa5fdf14e133e2a6"
+      },
+      "blaze-layout": {
+        "git": "https://github.com/EventedMind/blaze-layout.git",
+        "tag": "v0.2.5",
+        "commit": "273e3ab7d005d91a1a59c71bd224533b4dae2fbd"
+      },
+      "ms-seo": {
+        "git": "https://github.com/DerMambo/ms-seo",
+        "tag": "v0.2.6",
+        "commit": "1a4ba31a1f6f29009d3941e9dd883829ff4e4b8b"
+      },
+      "sitemaps": {
+        "git": "https://github.com/gadicohen/meteor-sitemaps.git",
+        "tag": "v0.0.16",
+        "commit": "ed4d908c581071d1302b37c6ba77dbce55333dd3"
+      },
+      "authorization": {
+        "git": "https://github.com/deepwell/meteor-authorization.git",
+        "tag": "v2.0.4",
+        "commit": "a1e222fc2f4caf81906bb1b57dd7f6efa4a0d071"
+      },
+      "steam": {
+        "git": "https://github.com/kidovate/meteor-steam.git",
+        "branch": "master",
+        "commit": "4976b42e9407cfd390c4579d2fb729394bac3977"
+      },
+      "accounts-steam": {
+        "git": "https://github.com/kidovate/meteor-accounts-steam.git",
+        "branch": "master",
+        "commit": "29e8b70d047871fc201c475c763e60d87b16ddcc"
+      },
+      "bootstrap-slider": {
+        "git": "https://github.com/kidovate/meteor-bootstrap-slider.git",
+        "tag": "v0.0.4",
+        "commit": "47efbdd80c1f37f0caede1068c2976163ef18c32"
+      },
+      "steamtracks": {
+        "path": "../steamtracks"
+      },
+      "timesync": {
+        "git": "https://github.com/mizzao/meteor-timesync.git",
+        "tag": "v0.1.5",
+        "commit": "3ee7eb21f60650de2ca32661b7c964e464e578e3"
+      },
+      "robots-txt": {
+        "git": "https://github.com/gadicohen/meteor-robots.txt.git",
+        "tag": "v0.0.8",
+        "commit": "dc1be195b8c0cf7d6263235484218911e1bf27d9"
+      }
+    }
+  }
+}

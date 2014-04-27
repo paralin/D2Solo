@@ -1,12 +1,15 @@
 @steamidconvert = (Meteor.require "steamidconvert")()
-@STracks = new SteamTracks "KBYkKGacGzZRZye7KPU6", "DBvaNuoKkWvyKX8GKmmw0VlTHvKs7wMH0X7ypKqC"
+@STracks = new SteamTracks "KBYkKGacGzZRZye7KPU6", "DBvaNuoKkWvyKX8GKmmw0VlTHvKs7wMH0X7ypKqC", true
 
 @STracksTokens = new Meteor.Collection "strackstokens"
 
+@toSteamID32 = (id)->
+  sids = (steamidconvert.convertToText id).split ":"
+  id = parseInt sids[2]
+  id*(2+parseInt(sids[1]))+1
+
 @generateSTracksToken = (user)->
-  steamID32 = steamidconvert.convertToText user.services.steam.id
-  steamID32 = parseInt steamID32.split(":")[2]
-  steamID32 = steamID32*2+1
+  steamID32 = toSteamID32 user.services.steam.id
   token = STracks.generateSignupToken null
   user.steamtracks.token = token
   Meteor.users.update({_id: user._id}, {$set: {steamtracks: user.steamtracks}})
@@ -17,7 +20,7 @@
 Router.map ->
   @route "strackscb",
     where: 'server'
-    path: 'steamtracks/callback'
+    path: 'streamtracks/callback'
     action: ->
       @response.writeHead 200, {'Content-Type': 'text/html'}
       token = @params.token
@@ -29,11 +32,11 @@ Router.map ->
         @response.end "Invalid token."
         return
       console.log "Finalizing SteamTracks signup for "+token
-      user = Meteor.users.findOne _id:t.user
-      info = STracks.ackSignupFinish token
-      console.log info
       status = STracks.getSignupStatus token
       console.log status
+      user = Meteor.users.findOne _id:t.user
+      info = STracks.ackSignupFinish token, status.user
+      console.log info
       if status.status is "declined"
         STracksTokens.remove _id: token
         @response.end "You have delined the steamtracks request."
@@ -41,9 +44,11 @@ Router.map ->
       if status.status isnt "accepted"
         @response.end "The signup process isn't finished yet (token pending still)."
         return
+      STracksTokens.remove _id: token
       delete user.steamtracks['token']
       user.steamtracks.authorized = true
       user.steamtracks.info = info.userinfo
+      user.steamtracks.id32 = status.user
       Meteor.users.update {_id:t.user}, {$set: {steamtracks: user.steamtracks}}
 
 Meteor.methods

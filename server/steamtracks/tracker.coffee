@@ -10,7 +10,7 @@
 
 @generateSTracksToken = (user)->
   steamID32 = toSteamID32 user.services.steam.id
-  token = STracks.generateSignupToken 
+  token = STracks.generateSignupToken steamID32
   user.steamtracks.token = token
   Meteor.users.update({_id: user._id}, {$set: {steamtracks: user.steamtracks}})
   console.log "Token for "+steamID32+" is "+token

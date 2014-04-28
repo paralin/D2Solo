@@ -1,22 +1,53 @@
 @steamidconvert = (Meteor.require "steamidconvert")()
-@STracks = new SteamTracks "KBYkKGacGzZRZye7KPU6", "DBvaNuoKkWvyKX8GKmmw0VlTHvKs7wMH0X7ypKqC", true
+@STracks = new SteamTracks "KBYkKGacGzZRZye7KPU6", "DBvaNuoKkWvyKX8GKmmw0VlTHvKs7wMH0X7ypKqC", false
+lastCheck = 0
 
+### Track Changes ###
+checkChanges = ->
+  console.log "updating SteamTracks data"
+  changes = STracks.changesSince lastCheck, undefined
+  lastCheck = new Date().getTime()
+  for sid, ch of changes.users
+    user = Meteor.users.findOne
+      'steamtracks.authorized': true
+      'steamtracks.id32': sid
+    continue if !user?
+    _.deepExtend user.steamtracks.info, ch
+    Meteor.users.update {_id: user._id}, {$set: {steamtracks: user.steamtracks}}
+    console.log sid+" updated steamtracks info"
+Meteor.startup ->
+  checkChanges()
+  Meteor.setInterval checkChanges, 60000*10
+
+### Track Leavers ###
+checkLeavers = ->
+  leavers = STracks.leavers()
+  for leaver in leavers
+    console.log leaver+" de-authed app"
+    user = Meteor.users.findOne
+      'steamtracks.authorized': true
+      'steamtracks.id32': leaver
+    continue if !user?
+    user.steamtracks = {authorized: false}
+    Meteor.users.update {_id: user._id}, {$set: {steamtracks: user.steamtracks}}
+  STracks.flushLeavers()
+Meteor.startup ->
+  Meteor.setInterval checkLeavers, 15000
+
+### Sign Up Stuff ###
 @STracksTokens = new Meteor.Collection "strackstokens"
-
 @toSteamID32 = (id)->
   sids = (steamidconvert.convertToText id).split ":"
   id = parseInt sids[2]
   id*(2+parseInt(sids[1]))+1
-
 @generateSTracksToken = (user)->
   steamID32 = toSteamID32 user.services.steam.id
-  token = STracks.generateSignupToken steamID32
+  token = STracks.generateSignupToken null
   user.steamtracks.token = token
   Meteor.users.update({_id: user._id}, {$set: {steamtracks: user.steamtracks}})
   console.log "Token for "+steamID32+" is "+token
   STracksTokens.insert {_id: token, user: user._id}
   token
-
 Router.map ->
   @route "strackscb",
     where: 'server'
@@ -50,7 +81,6 @@ Router.map ->
       user.steamtracks.info = info.userinfo
       user.steamtracks.id32 = status.user
       Meteor.users.update {_id:t.user}, {$set: {steamtracks: user.steamtracks}}
-
 Meteor.methods
   "beginSTAuth": ->
     if !@userId?

@@ -1,5 +1,5 @@
 @steamidconvert = (Meteor.require "steamidconvert")()
-@STracks = new SteamTracks "KBYkKGacGzZRZye7KPU6", "DBvaNuoKkWvyKX8GKmmw0VlTHvKs7wMH0X7ypKqC", false
+@STracks = new SteamTracks "6KRhiKRF5nF3QYtcoLZW", "Jkecd05f90R17VVFpyxiClWQa9ZEDb67RwmXGFdC", false
 lastCheck = 0
 
 ### Track Changes ###

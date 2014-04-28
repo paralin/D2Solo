@@ -10,11 +10,13 @@ checkChanges = ->
   for sid, ch of changes.users
     user = Meteor.users.findOne
       'steamtracks.authorized': true
-      'steamtracks.id32': sid
-    continue if !user?
+      'steamtracks.id32': parseInt sid
+    if !user?
+      console.log "update for #{parseInt sid} but user not found"
+      continue
     _.deepExtend user.steamtracks.info, ch
     Meteor.users.update {_id: user._id}, {$set: {steamtracks: user.steamtracks}}
-    console.log sid+" updated steamtracks info"
+    console.log (parseInt sid)+" updated steamtracks info"
 Meteor.startup ->
   checkChanges()
   Meteor.setInterval checkChanges, 60000*10

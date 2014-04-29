@@ -74,6 +74,11 @@ Template.matchmaking.dialogClass = ->
       return "findDialogLarger"
 Template.matchmaking.progress = ->
   Session.get "findProgress"
+Template.matchmaking.lobbyPass = ->
+  user = Meteor.user()
+  return if !user? || !user.queue? || !user.queue.lobbyPass? || user.queue.lobbyPass is "loading"
+  user.queue.lobbyPass
+  
 Template.matchmaking.status = ->
   user = Meteor.user()
   if user? && user.queue?

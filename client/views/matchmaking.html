@@ -26,6 +26,9 @@
         <div style="position:absolute;float:none;left:50%;font-weight:bold;top:45%;left:48%">VS.</div>
         {{>userCard currentUser._id}}
         {{>userCard currentUser.queue.matchUser}}
+        {{#if lobbyPass}}
+        <div style="font-weight: bold;text-align:center;margin-top:170px" class="center-block">Lobby is ready, search for the lobby with password "{{lobbyPass}}".</div>
+        {{else}}
         {{#if currentUser.queue.hasAccepted}}
         <div style="text-align:center;margin-top:170px" class="center-block">You have accepted, please wait...</div>
         {{else}}
@@ -33,6 +36,7 @@
           <button class="acceptMatch btn btn-success">Accept</button>
           <button class="rejectMatch btn btn-danger">Decline</button>
         </div>
+        {{/if}}
         {{/if}}
         {{/unless}}
       </div>

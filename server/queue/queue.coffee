@@ -28,13 +28,15 @@ queueProc = ->
 doIncRange = ->
   Meteor.users.update {'queue.range': {$lt: 3000}, 'queue.matchFound': false, 'status.online': true}, {$inc: {'queue.range': 50}}, {multi: true}
 @LobbyStartQueue = new Meteor.Collection "lobbyStartQueue"
-startLobby = (queue)->
+startLobby = (uid, queue)->
   stats = LobbyStartQueue.findOne {_id: queue.lobbyID}
   if !stats?
     stats =
       status: 0
       bot: null
       pass: ""
+      user1: Meteor.users.findOne({_id: uid})
+      user2: Meteor.users.findOne({_id: queue.matchUser})
       _id: queue.lobbyID
     LobbyStartQueue.insert stats
 
@@ -51,10 +53,11 @@ Meteor.startup ->
     added: (lobby)->
       Meteor.users.update {'queue.lobbyID': lobby._id}, {$set: {'queue.lobbyPass': lobby.pass}}, {multi: true}
       LobbyStartQueue.update {_id: lobby._id}, {$set: {status: 2}}
+      console.log "lobby launched, password #{lobby.pass}"
   Meteor.users.find({'queue.matchFound': true, 'queue.lobbyPass': 'loading'}).observe
     added: (user)->
       console.log "#{user._id} loading lobby #{user.queue.lobbyID}"
-      startLobby user.queue
+      startLobby user._id, user.queue
   Meteor.users.find({'queue.matchFound': true, 'queue.lobbyPass': {$exists: false}}).observe
     added: (user)->
       console.log "#{user._id} entered waiting to accept state"

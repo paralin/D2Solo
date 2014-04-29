@@ -1,3 +1,4 @@
+@randomWords = Meteor.require('random-words')
 @sbinds = (b)->
   log = (msg)->
     console.log "["+b.b.user+"] "+msg
@@ -41,9 +42,38 @@
     handleFriend sid, friend
 
 @dbinds = (b)->
+  password = ""
   log = (msg)->
     console.log "["+b.b.user+"][Dota] "+msg
   d = b.d
+
+  launchLobby = (lobby)->
+    password = randomWords({exactly: 2, join: ' '})
+    d.leavePracticeLobby()
+    d.createPracticeLobby "D2SOLO #{lobby.user1.services.steam.username} vs. #{lobby.user2.services.steam.username}", password, undefined, Dota2.GameMode.DOTA_GAMEMODE_MO
+
+  Deps.autorun ->
+    status = BotStatus.findOne({_id: b.b.user})
+    return if !status? || status.status < 1
+    if status is 1
+      console.log "bot #{status._id} ready"
+      return
+    if status is 2
+      console.log "bot #{status._id} launching lobby #{status.lobby._id}"
+      launchLobby status.lobby
+    if status is 3
+      console.log "bot #{status._id} waiting for users to connect"
+      #at this point system is waiting for LobbyStartQueue status -> 3
+      
+  d.on 'practiceLobbyCreateResponse', (resp, lobid)->
+    rmeteor ->
+      status = BotStatus.findOne {_id: b.b.user}
+      return if !status? || status.status < 1
+      if status is 2
+        console.log "lobby created, lobid #{lobid} for lobby id #{status.lobby._id}"
+        BotStatus.update {_id: b.b.user}, {$set: {status: 3}}
+        LobbyStartQueue.update {_id: status.lobby._id}, {$set: {status: 1, pass: password}}
+
   b.s.on 'loggedOn', ->
     d.launch()
   b.fetchMatchResult = (id)->
@@ -66,10 +96,4 @@
     return res.result
   d.on 'ready', ->
     log "Dota client ready."
-    d.createPracticeLobby "Test Lobby", "test", Dota2.ServerRegion.USWEST, Dota2.GameMode.DOTA_GAMEMODE_MO, (err, res)->
-      log "created test lobby, configuring"
-      d.configPracticeLobby
-        game_name: "Configured Test"
-      , (err, res)->
-        console.log err
-        console.log res
+    d.leavePracticeLobby()

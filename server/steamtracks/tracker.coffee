@@ -94,6 +94,7 @@ Router.map ->
       user.steamtracks.info = info.userinfo
       user.steamtracks.id32 = status.user
       Meteor.users.update {_id:t.user}, {$set: {steamtracks: user.steamtracks}}
+      @response.end "<script>window.close();</script>"
 Meteor.methods
   "beginSTAuth": ->
     if !@userId?

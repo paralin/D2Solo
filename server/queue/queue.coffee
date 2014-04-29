@@ -41,6 +41,7 @@ startLobby = (uid, queue)->
     LobbyStartQueue.insert stats
 
 Meteor.startup ->
+  LobbyStartQueue.remove({})
   Meteor.users.update {}, {$set: {queue: null}}, {multi: true}
   Meteor.setInterval doIncRange, 1000
   queueCount = 0

@@ -10,9 +10,9 @@
 
 clients = {}
 
-startLobby = ->
-  lobby = LobbyStartQueue.findOne {status: 0}
-  bot = BotStatus.findOne {status: 1}
+startLobby = (lobby, bot)->
+  lobby = LobbyStartQueue.findOne {status: 0} if !lobby?
+  bot = BotStatus.findOne {status: 1} if !bot?
   return if !lobby? || !bot?
   console.log "assigning bot #{bot._id} to #{lobby._id}"
   BotStatus.update {_id: bot._id}, {$set: {status: 2, lobby: lobby}}
@@ -55,7 +55,11 @@ startBot = (bot)->
   dbinds clients[bot.user]
 
 Meteor.startup ->
-  Deps.autorun startLobby
+  LobbyStartQueue.find({status: 0}).observe
+    added: startLobby
+  BotStatus.find({status: 1}).observe
+    added: (b)->
+      startLobby undefined, b
   BotDB.find().observe
     added: startBot
     changed: updateBot

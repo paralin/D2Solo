@@ -52,24 +52,30 @@
     d.leavePracticeLobby()
     d.createPracticeLobby "D2SOLO #{lobby.user1.services.steam.username} vs. #{lobby.user2.services.steam.username}", password, undefined, Dota2.GameMode.DOTA_GAMEMODE_MO
 
-  Deps.autorun ->
+  statusUpdate = ->
     status = BotStatus.findOne({_id: b.b.user})
+    console.log status
     return if !status? || status.status < 1
-    if status is 1
+    if status.status is 1
       console.log "bot #{status._id} ready"
       return
-    if status is 2
+    if status.status is 2
       console.log "bot #{status._id} launching lobby #{status.lobby._id}"
       launchLobby status.lobby
-    if status is 3
+    if status.status is 3
       console.log "bot #{status._id} waiting for users to connect"
       #at this point system is waiting for LobbyStartQueue status -> 3
+      
+  BotStatus.find({_id: b.b.user}, {limit: 1}).observe
+    added: statusUpdate
+    changed: statusUpdate
+    removed: statusUpdate
       
   d.on 'practiceLobbyCreateResponse', (resp, lobid)->
     rmeteor ->
       status = BotStatus.findOne {_id: b.b.user}
       return if !status? || status.status < 1
-      if status is 2
+      if status.status is 2
         console.log "lobby created, lobid #{lobid} for lobby id #{status.lobby._id}"
         BotStatus.update {_id: b.b.user}, {$set: {status: 3}}
         LobbyStartQueue.update {_id: status.lobby._id}, {$set: {status: 1, pass: password}}

@@ -16,3 +16,5 @@ Session.vim
 ### Meteor ###
 .meteor/local
 .meteor/meteorite
+
+smart.lock

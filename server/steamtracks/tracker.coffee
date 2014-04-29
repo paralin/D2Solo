@@ -19,7 +19,7 @@ checkChanges = ->
     if !user?
       console.log "update for #{parseInt sid} but user not found"
       continue
-    if ch.dota2.soloCompetitiveRank?
+    if ch.dota2? && ch.dota2.soloCompetitiveRank?
       ch.dota2.soloCompetitiveRank = parseInt ch.dota2.soloCompetitiveRank
     _.deepExtend user.steamtracks.info, ch
     Meteor.users.update {_id: user._id}, {$set: {steamtracks: user.steamtracks}}

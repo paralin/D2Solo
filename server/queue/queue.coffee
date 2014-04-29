@@ -27,9 +27,34 @@ queueProc = ->
       Meteor.users.update {_id: match._id}, {$set: {'queue.matchFound': true, 'queue.matchUser': user._id, 'queue.hasAccepted': false}}
 doIncRange = ->
   Meteor.users.update {'queue.range': {$lt: 3000}, 'queue.matchFound': false, 'status.online': true}, {$inc: {'queue.range': 50}}, {multi: true}
+@LobbyStartQueue = new Meteor.Collection "lobbyStartQueue"
+startLobby = (queue)->
+  stats = LobbyStartQueue.findOne {_id: queue.lobbyID}
+  if !stats?
+    stats =
+      status: 0
+      bot: null
+      pass: ""
+      _id: queue.lobbyID
+    LobbyStartQueue.insert stats
+
 Meteor.startup ->
+  Meteor.users.update {}, {$set: {queue: null}}, {multi: true}
   Meteor.setInterval doIncRange, 1000
   queueCount = 0
+  LobbyStartQueue.find({status:3}).observe
+    added: (lobby)->
+      console.log "lobby #{lobby._id} has begun play"
+      LobbyStartQueue.remove {_id: lobby._id}
+      Meteor.users.update {'queue.lobbyID': lobby._id}, {$set: {queue: {hasStarted: true}}}, {multi: true}
+  LobbyStartQueue.find({status: 1}).observe
+    added: (lobby)->
+      Meteor.users.update {'queue.lobbyID': lobby._id}, {$set: {'queue.lobbyPass': lobby.pass}}, {multi: true}
+      LobbyStartQueue.update {_id: lobby._id}, {$set: {status: 2}}
+  Meteor.users.find({'queue.matchFound': true, 'queue.lobbyPass': 'loading'}).observe
+    added: (user)->
+      console.log "#{user._id} loading lobby #{user.queue.lobbyID}"
+      startLobby user.queue
   Meteor.users.find({'queue.matchFound': true, 'queue.lobbyPass': {$exists: false}}).observe
     added: (user)->
       console.log "#{user._id} entered waiting to accept state"
@@ -38,7 +63,7 @@ Meteor.startup ->
       if user.queue.hasAccepted && !match.queue.lobbyPass?
         console.log "#{user._id} accepted match with #{user.queue.matchUser}"
         if match.queue.hasAccepted
-          upd = {'queue.lobbyPass': 'test civil'}
+          upd = {'queue.lobbyPass': 'loading', 'queue.lobbyID': Random.id()}
           Meteor.users.update {_id:user._id}, {$set: upd}
           Meteor.users.update {_id:user.queue.matchUser}, {$set: upd}
     removed: (user)->

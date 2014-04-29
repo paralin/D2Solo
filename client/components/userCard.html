@@ -1,0 +1,9 @@
+<template name="userCard">
+{{#with user}}
+<div class="userCard">
+  <div style="background:url({{services.steam.avatar.full}});background-size:cover;width:100px;height:100px" class="center-block"></div>
+  <div style="margin-top:10px;text-align:center;font-weight:bold">{{profile.name}}</div>
+
+</div>
+{{/with}}
+</template>

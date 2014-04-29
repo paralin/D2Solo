@@ -26,9 +26,8 @@
         "branch": "master"
       },
       "bootstrap-slider": {},
-      "steamtracks": {
-        "path": "../steamtracks"
-      }
+      "steamtracks": {},
+      "moment": {}
     },
     "packages": {
       "bootstrap-3": {
@@ -107,7 +106,14 @@
         "commit": "47efbdd80c1f37f0caede1068c2976163ef18c32"
       },
       "steamtracks": {
-        "path": "../steamtracks"
+        "git": "https://github.com/kidovate/meteor-steamtracks.git",
+        "tag": "v0.1.0",
+        "commit": "498658744d5d5ba97e97853f71b47b7dc9f75b09"
+      },
+      "moment": {
+        "git": "https://github.com/acreeger/meteor-moment.git",
+        "tag": "v2.6.0",
+        "commit": "26156df681750fd6e6ed77043eef32b6653ebbdf"
       },
       "timesync": {
         "git": "https://github.com/mizzao/meteor-timesync.git",

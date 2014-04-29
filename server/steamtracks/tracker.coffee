@@ -5,7 +5,12 @@ lastCheck = 0
 ### Track Changes ###
 checkChanges = ->
   console.log "updating SteamTracks data"
-  changes = STracks.changesSince lastCheck, undefined
+  changes = null
+  try
+    changes = STracks.changesSince lastCheck, undefined
+  catch e
+    console.log "failed to fetch SteamTracks data"
+    return
   lastCheck = new Date().getTime()
   for sid, ch of changes.users
     user = Meteor.users.findOne
@@ -14,16 +19,22 @@ checkChanges = ->
     if !user?
       console.log "update for #{parseInt sid} but user not found"
       continue
+    if ch.dota2.soloCompetitiveRank?
+      ch.dota2.soloCompetitiveRank = parseInt ch.dota2.soloCompetitiveRank
     _.deepExtend user.steamtracks.info, ch
     Meteor.users.update {_id: user._id}, {$set: {steamtracks: user.steamtracks}}
-    console.log (parseInt sid)+" updated steamtracks info"
+    console.log " --> #{(parseInt sid)}"
 Meteor.startup ->
   checkChanges()
   Meteor.setInterval checkChanges, 60000*10
 
 ### Track Leavers ###
 checkLeavers = ->
-  leavers = STracks.leavers()
+  try
+    leavers = STracks.leavers()
+  catch e
+    console.log "failed to fetch leavers"
+    return
   for leaver in leavers
     console.log leaver+" de-authed app"
     user = Meteor.users.findOne

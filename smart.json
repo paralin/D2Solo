@@ -24,6 +24,7 @@
       "branch": "master"
     },
     "bootstrap-slider": {},
-    "steamtracks": {}
+    "steamtracks": {},
+    "moment": {}
   }
 }

@@ -9,29 +9,80 @@
       </div>
     </div>
   </div>
+  {{#if currentUser.queue}}
+  <div class="row-fluid" style="padding-left:2%;padding-right:2%">
+    <div class="findDialog col-sm-8 center-block {{dialogClass}}" style="float:none;">
+      <div class="dTitle">{{status}}</div>
+      <div class="loadingBarContainer">
+        <div class="progress {{progBarClass}}">
+          <div class="progress-bar progress-bar-{{servProgColor}}" role="progressbar" style="width:{{progress}}%;padding-top:25px">
+          </div>
+        </div>
+        {{#unless currentUser.queue.matchFound}}
+        There are currently <b>{{queueCount}}</b> players queuing for a match.<br>
+        Your search range is currently <b>{{searchRange}}</b> MMR.<br/>
+        <button class="stopQueue btn btn-danger center-block" style="margin-top:5px">Stop Queuing</button>
+        {{else}}
+        <div style="position:absolute;float:none;left:50%;font-weight:bold;top:45%;left:48%">VS.</div>
+        {{>userCard currentUser._id}}
+        {{>userCard currentUser.queue.matchUser}}
+        {{#if currentUser.queue.hasAccepted}}
+        <div style="text-align:center;margin-top:170px" class="center-block">You have accepted, please wait...</div>
+        {{else}}
+        <div class="center-block" style="width: 155px;padding-top:150px">
+          <button class="acceptMatch btn btn-success">Accept</button>
+          <button class="rejectMatch btn btn-danger">Decline</button>
+        </div>
+        {{/if}}
+        {{/unless}}
+      </div>
+    </div>
+  </div>
+  {{else}}
   <div class="row-fluid" style="padding-left:2%;padding-right:2%">
     <div class="col-sm-4 desc-box">
       <h4 class="page-header">Queuing</h4>
       <p>
-        The system will search for another player within your desired skill range. Skill is determined by your Dota 2 solo MMR, and is then updated by your wins and losses on d2solo.
+      The system will search for another user close to your current Dota 2 solo skill level. SteamTracks (also used on D2TeamMM and Dota2TopList) is responsible for updating your solo rating and thus needs to be linked to D2Solo to queue in matchmaking. You must therefore also have your 10 solo calibration games played to start playing on D2Solo.
       </p>
+      {{#if currentUser}}
       <p>
-        Select a queue range:
+      {{#if currentUser.steamtracks.authorized}}
+      {{#with currentUser.steamtracks.info.dota2}}
+      {{#unless soloCompetitiveRank}}
+      You do not have your solo ranked MMR yet. Please play your calibration matches and get your MMR ranking. Please note that SteamTracks updates every 24 hours.
+      {{else}}
+      You have linked SteamTracks, your current solo MMR (used on D2Solo) is <b>{{currentUser.steamtracks.info.dota2.soloCompetitiveRank}}</b>.
+      {{/unless}}
+      {{/with}}
+      {{else}}
+      You have not linked SteamTracks yet. <a id="startSTracksAuth" class="btn btn-success">Link SteamTracks</a>
+      {{/if}}
+      {{#if currentUser.queueP}}
+      <p>
+      You are prevented from matchmaking until {{preventTime}}.
       </p>
-      <input id="queueRangeSlider" style="width:100%" />
+      {{/if}}
+      </p>
+      {{else}}
+      <p>
+      You need to sign in before you can begin queuing.
+      </p>
+      {{/if}}
     </div>
     <div class="col-sm-2 center-block" style="float:none;text-align:center">
-      <a class="btn btn-success">Start Queuing</a>
+      <a class="btn btn-success" id="startQueuing" style="font-size:18px">Start Queuing</a>
     </div>
     <div class="col-sm-4 desc-box" style="float:right;position:relative;top:-34px">
       <h4 class="page-header">Joining the Match</h4>
       <p>
-        Once your matchup is found, you will be asked to accept. After accepting, a bot will create an ingame lobby for you with a generated password phrase. You can then join the lobby by going to Play - Find Lobby - Private Lobbies - and enter the password to find the lobby.
+      Once your matchup is found, you will be asked to accept. After accepting, a bot will create an ingame lobby for you with a generated password phrase. You can then join the lobby by going to Play - Find Lobby - Private Lobbies - and enter the password to find the lobby.
       </p>
       <p>
-        You can also add the bot as a friend to see the lobby in your friends' lobbies list.
+      You can also add the bot as a friend to see the lobby in your friends' lobbies list.
       </p>
     </div>
   </div>
+  {{/if}}
 </div>
 </template>

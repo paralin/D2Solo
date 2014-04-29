@@ -78,6 +78,8 @@ Template.matchmaking.status = ->
   user = Meteor.user()
   if user? && user.queue?
     if user.queue.matchFound
+      if user.queue.lobbyPass? and user.queue.lobbyPass isnt "loading"
+        return "Lobby ready, connect now!"
       return "Found a match!"
     else
       return "Searching for a match..."

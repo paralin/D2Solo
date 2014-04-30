@@ -6,7 +6,10 @@
     "dota2": {},
     "font-awesome": {},
     "iron-router-progress": {},
-    "iron-router": {},
+    "iron-router": {
+      "git": "https://github.com/kidovate/iron-router.git",
+      "branch": "master"
+    },
     "accounts-ui-bootstrap-3": {
       "git": "https://github.com/kidovate/meteor-accounts-ui-bootstrap-3.git",
       "branch": "steam"

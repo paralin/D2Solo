@@ -49,7 +49,7 @@ Meteor.startup ->
     added: (lobby)->
       console.log "lobby #{lobby._id} has begun play"
       LobbyStartQueue.remove {_id: lobby._id}
-      Meteor.users.update {'queue.lobbyID': lobby._id}, {$set: {queue: {hasStarted: true}}}, {multi: true}
+      Meteor.users.update {'queue.lobbyID': lobby._id}, {$set: {'queue.hasStarted': true}}, {multi: true}
   LobbyStartQueue.find({status: 1}).observe
     added: (lobby)->
       Meteor.users.update {'queue.lobbyID': lobby._id}, {$set: {'queue.lobbyPass': lobby.pass}}, {multi: true}

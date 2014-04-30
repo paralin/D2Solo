@@ -135,5 +135,5 @@
     rmeteor ->
       bots = BotStatus.find({sid: {$exists: true}}).fetch()
       for bot in bots
-        d.addFriend bot.sid
+        b.s.addFriend bot.sid
     d.leavePracticeLobby()

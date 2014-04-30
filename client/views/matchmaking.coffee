@@ -3,6 +3,13 @@ Template.matchmaking.preventTime = ->
   return if !user?
   moment(user.queueP.preventUntil).format "h:mm:ss a"
 Template.matchmaking.events
+  "click .closeMatch": ->
+    Meteor.call "closeMatch", (err, res)->
+      if err?
+        $.pnotify
+          title: "Can't Close"
+          text: err.reason
+          type: "error"
   "click .acceptMatch": ->
     Meteor.call "acceptMatch", (err, res)->
       if err?

@@ -59,7 +59,7 @@ Meteor.startup ->
     added: (user)->
       console.log "#{user._id} loading lobby #{user.queue.lobbyID}"
       startLobby user._id, user.queue
-  Meteor.users.find({'queue.matchFound': true, 'queue.lobbyPass': {$exists: false}}).observe
+  Meteor.users.find({'queue.matchFound': true, 'queue.hasStarted': false, 'queue.lobbyPass': {$exists: false}}).observe
     added: (user)->
       console.log "#{user._id} entered waiting to accept state"
     changed: (user)->
@@ -85,6 +85,17 @@ Meteor.startup ->
   Meteor.setInterval queueProc, 2000
 
 Meteor.methods
+  "closeMatch": ->
+    if !@userId?
+      throw new Meteor.Error 403, "You are not logged in."
+    user = Meteor.users.findOne _id:@userId
+    if !user.queue?
+      throw new Meteor.Error 404, "You are not in a game."
+    if !user.queue.matchFound
+      throw new Meteor.Error 404, "Match has not been found."
+    if !user.queue.hasStarted
+      throw new Meteor.Error 404, "Match has not started yet."
+    Meteor.users.update {_id:@userId}, {$unset: {queue: ""}}
   "acceptMatch": ->
     if !@userId?
       throw new Meteor.Error 403, "You are not logged in."
@@ -103,7 +114,8 @@ Meteor.methods
     if !user.queue.matchFound
       throw new Meteor.Error 404, "Match has not been found."
     Meteor.users.update {_id: @userId}, {$set: {queue: null, 'queueP': {preventUntil: new Date().getTime()+30000}}}
-    Meteor.users.update {_id: user.queue.matchUser}, {$set: {queue: {range: 300, matchFound: false}}}
+    if user.queue.matchUser isnt user._id
+      Meteor.users.update {_id: user.queue.matchUser}, {$set: {queue: {range: 300, matchFound: false}}}
   "stopQueue": ->
     return if !@userId?
     user = Meteor.users.findOne _id:@userId

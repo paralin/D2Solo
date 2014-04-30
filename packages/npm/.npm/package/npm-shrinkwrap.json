@@ -29,19 +29,30 @@
       }
     },
     "dota2": {
-      "version": "https://github.com/kidovate/node-dota2/tarball/9e5ba15e8526d64606e48697f04b6dae421d9a60",
+      "version": "https://github.com/kidovate/node-dota2/tarball/a2ece55a82396f00328669b89b82948b1ec73dc9",
       "dependencies": {
         "protobuf": {
           "version": "0.8.7"
         },
         "deferred": {
-          "version": "0.7.0",
+          "version": "0.7.1",
           "dependencies": {
             "es5-ext": {
-              "version": "0.9.2"
+              "version": "0.10.3",
+              "dependencies": {
+                "es6-iterator": {
+                  "version": "0.1.1"
+                },
+                "es6-symbol": {
+                  "version": "0.1.0"
+                }
+              }
             },
             "event-emitter": {
-              "version": "0.2.2"
+              "version": "0.3.1"
+            },
+            "d": {
+              "version": "0.1.1"
             },
             "next-tick": {
               "version": "0.2.2"

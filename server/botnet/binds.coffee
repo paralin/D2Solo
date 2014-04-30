@@ -52,7 +52,7 @@
     password = randomWords({exactly: 2, join: ' '})
     d.leavePracticeLobby()
     d.createPracticeLobby "D2SOLO #{lobby.user1.services.steam.username} vs. #{lobby.user2.services.steam.username}", password, undefined, Dota2.GameMode.DOTA_GAMEMODE_MO
-    allowedUsers = [b.s.steamID]
+    allowedUsers = []
     allowedUsers.push lobby.user1.services.steam.id
     allowedUsers.push lobby.user2.services.steam.id
 
@@ -77,19 +77,22 @@
       
   knownMembers = []
   d.on 'practiceLobbyUpdate', (resp, lobby)->
-    members = []
+    dire = []
+    radiant = []
     for member in lobby.members
-      members.push member.id
+      dire.push member.id if member.team is "DOTA_GC_TEAM_GOOD_GUYS"
+      radiant.push member.id if member.team is "DOTA_GC_TEAM_BAD_GUYS"
       if !_.contains knownMembers, member.id
         log "#{member.name} joined lobby"
         knownMembers.push member.id
-      if !_.contains allowedMembers, member.id
+      if !_.contains allowedUsers, member.id
         log "#{member.name} not a assigned lobby member! kick him!"
     rmeteor ->
       status = BotStatus.findOne {_id: b.b.user}
       return if !status? || status.status != 3
-      for user in allowedMembers
-        return if !_.contains members, user
+      return if dire.length isnt 1 || radiant.length isnt 1
+      for user in allowedUsers
+        return if !_.contains dire, user && !_.contains radiant, user
       log "all members have joined #{status.lobby._id}"
       BotStatus.update {_id: b.b.user}, {$set: {status: 1}, $unset: {lobby: ""}}
       LobbyStartQueue.update {_id: status.lobby._id}, {$set: {status: 3}}

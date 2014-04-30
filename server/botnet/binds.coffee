@@ -43,6 +43,7 @@
 
 @dbinds = (b)->
   password = ""
+  allowedUsers = []
   log = (msg)->
     console.log "["+b.b.user+"][Dota] "+msg
   d = b.d
@@ -51,6 +52,9 @@
     password = randomWords({exactly: 2, join: ' '})
     d.leavePracticeLobby()
     d.createPracticeLobby "D2SOLO #{lobby.user1.services.steam.username} vs. #{lobby.user2.services.steam.username}", password, undefined, Dota2.GameMode.DOTA_GAMEMODE_MO
+    allowedUsers = [b.s.steamID]
+    allowedUsers.push lobby.user1.services.steam.id
+    allowedUsers.push lobby.user2.services.steam.id
 
   statusUpdate = ->
     status = BotStatus.findOne({_id: b.b.user})
@@ -71,15 +75,34 @@
     changed: statusUpdate
     removed: statusUpdate
       
+  knownMembers = []
+  d.on 'practiceLobbyUpdate', (resp, lobby)->
+    members = []
+    for member in lobby.members
+      members.push member.id
+      if !_.contains knownMembers, member.id
+        log "#{member.name} joined lobby"
+        knownMembers.push member.id
+      if !_.contains allowedMembers, member.id
+        log "#{member.name} not a assigned lobby member! kick him!"
+    rmeteor ->
+      status = BotStatus.findOne {_id: b.b.user}
+      return if !status? || status.status != 3
+      for user in allowedMembers
+        return if !_.contains members, user
+      log "all members have joined #{status.lobby._id}"
+      BotStatus.update {_id: b.b.user}, {$set: {status: 1}, $unset: {lobby: ""}}
+      LobbyStartQueue.update {_id: status.lobby._id}, {$set: {status: 3}}
+      d.leavePracticeLobby()
+        
   d.on 'practiceLobbyCreateResponse', (resp, lobid)->
     rmeteor ->
       status = BotStatus.findOne {_id: b.b.user}
-      return if !status? || status.status < 1
+      return if !status? || status.status < 2
       if status.status is 2
-        console.log "lobby created, lobid #{lobid} for lobby id #{status.lobby._id}"
+        log "lobby created, lobid #{lobid} for lobby id #{status.lobby._id}"
         BotStatus.update {_id: b.b.user}, {$set: {status: 3}}
         LobbyStartQueue.update {_id: status.lobby._id}, {$set: {status: 1, pass: password}}
-
   b.s.on 'loggedOn', ->
     d.launch()
   b.fetchMatchResult = (id)->

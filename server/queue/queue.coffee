@@ -59,7 +59,7 @@ Meteor.startup ->
     added: (user)->
       console.log "#{user._id} loading lobby #{user.queue.lobbyID}"
       startLobby user._id, user.queue
-  Meteor.users.find({'queue.matchFound': true, 'queue.hasStarted': false, 'queue.lobbyPass': {$exists: false}}).observe
+  Meteor.users.find({'queue.matchFound': true, 'queue.hasStarted': {$exists: false}, 'queue.lobbyPass': {$exists: false}}).observe
     added: (user)->
       console.log "#{user._id} entered waiting to accept state"
     changed: (user)->

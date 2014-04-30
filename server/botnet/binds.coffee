@@ -34,7 +34,7 @@
     b.s.setPersonaState(Steam.EPersonaState.Online)
     b.s.setPersonaName b.b.name
     rmeteor ->
-      BotStatus.update {_id: b.b.user}, {$set: {status: 1}}
+      BotStatus.update {_id: b.b.user}, {$set: {status: 1, sid: b.s.steamID}}
   b.s.on 'relationships', ->
     for sid, friend of b.s.friends
       handleFriend sid, friend
@@ -58,7 +58,6 @@
 
   statusUpdate = ->
     status = BotStatus.findOne({_id: b.b.user})
-    console.log status
     return if !status? || status.status < 1
     if status.status is 1
       console.log "bot #{status._id} ready"
@@ -80,25 +79,30 @@
     dire = []
     radiant = []
     for member in lobby.members
-      dire.push member.id if member.team is "DOTA_GC_TEAM_GOOD_GUYS"
-      radiant.push member.id if member.team is "DOTA_GC_TEAM_BAD_GUYS"
+      if member.team is "DOTA_GC_TEAM_GOOD_GUYS"
+        radiant.push member.id
+      else if member.team is "DOTA_GC_TEAM_BAD_GUYS"
+        dire.push member.id
       if !_.contains knownMembers, member.id
         log "#{member.name} joined lobby"
         knownMembers.push member.id
-      if !_.contains allowedUsers, member.id
-        log "#{member.name} not a assigned lobby member! kick him!"
+      if member.id != b.s.steamID and !_.contains allowedUsers, member.id
+        log "#{member.name} not an assigned lobby member! kick him!"
     rmeteor ->
       status = BotStatus.findOne {_id: b.b.user}
       return if !status? || status.status != 3
       return if dire.length isnt 1 || radiant.length isnt 1
       for user in allowedUsers
-        return if !_.contains dire, user && !_.contains radiant, user
+        direHas = _.contains dire, user
+        radiantHas = _.contains radiant, user
+        return if !direHas && !radiantHas
       log "all members have joined #{status.lobby._id}"
       BotStatus.update {_id: b.b.user}, {$set: {status: 1}, $unset: {lobby: ""}}
       LobbyStartQueue.update {_id: status.lobby._id}, {$set: {status: 3}}
       d.leavePracticeLobby()
         
   d.on 'practiceLobbyCreateResponse', (resp, lobid)->
+    knownMembers = []
     rmeteor ->
       status = BotStatus.findOne {_id: b.b.user}
       return if !status? || status.status < 2
@@ -128,4 +132,8 @@
     return res.result
   d.on 'ready', ->
     log "Dota client ready."
+    rmeteor ->
+      bots = BotStatus.find({sid: {$exists: true}}).fetch()
+      for bot in bots
+        d.addFriend bot.sid
     d.leavePracticeLobby()

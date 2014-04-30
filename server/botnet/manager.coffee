@@ -43,7 +43,7 @@ startBot = (bot)->
     _id: bot.user
     status: 0
   sclient = new Steam.SteamClient
-  dclient = new Dota2.Dota2Client sclient, true
+  dclient = new Dota2.Dota2Client sclient, false
   clients[bot.user] =
     s: sclient
     d: dclient

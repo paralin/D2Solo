@@ -51,6 +51,7 @@ Meteor.startup ->
       console.log "lobby #{lobby._id} has begun play"
       LobbyStartQueue.remove {_id: lobby._id}
       Meteor.users.update {'queue.lobbyID': lobby._id}, {$set: {'queue.hasStarted': true}}, {multi: true}
+      incLobbyCount()
   LobbyStartQueue.find({status: 1}).observe
     added: (lobby)->
       Meteor.users.update {'queue.lobbyID': lobby._id}, {$set: {'queue.lobbyPass': lobby.pass}}, {multi: true}
@@ -73,6 +74,7 @@ Meteor.startup ->
       , 15000
     changed: (user)->
       match = Meteor.users.findOne _id:user.queue.matchUser
+      return if !user.queue? || !match.queue?
       if user.queue.hasAccepted && !match.queue.lobbyPass?
         console.log "#{user._id} accepted match with #{user.queue.matchUser}"
         if acceptTimeouts[user._id]?

@@ -36,6 +36,38 @@
         }
       }
     },
+    "newrelic": {
+      "version": "1.5.2",
+      "dependencies": {
+        "bunyan": {
+          "version": "0.14.6"
+        },
+        "continuation-local-storage": {
+          "version": "3.0.0",
+          "dependencies": {
+            "emitter-listener": {
+              "version": "1.0.1",
+              "dependencies": {
+                "shimmer": {
+                  "version": "1.0.0"
+                }
+              }
+            },
+            "async-listener": {
+              "version": "0.4.5",
+              "dependencies": {
+                "shimmer": {
+                  "version": "1.0.0"
+                }
+              }
+            }
+          }
+        },
+        "yakaa": {
+          "version": "1.0.0"
+        }
+      }
+    },
     "random-words": {
       "version": "0.0.1"
     },

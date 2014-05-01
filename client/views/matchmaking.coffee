@@ -42,7 +42,11 @@ Template.matchmaking.events
             text: err.reason
   "click #startSTracksAuth": ->
     $("#startSTrackAuth").prop('disabled', true)
-    startSteamtracksAuth()
+
+Template.matchmaking.steamTracks = ->
+  startSteamtracksAuth()
+  Session.get "stracksURL"
+
 targetFindTime = 30000
 Meteor.startup ->
   Session.set "findProgress", 50

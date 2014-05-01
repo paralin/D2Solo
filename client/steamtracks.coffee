@@ -1,3 +1,4 @@
+Session.set "stracksURL", ""
 @startSteamtracksAuth = ->
   Meteor.call "beginSTAuth", (err, res)->
     if err?
@@ -7,9 +8,9 @@
         type: "error"
     else
       if !res
-        $.pnotify
-          title: "Authorized"
-          text: "Already authorized with SteamTracks."
-          type: "success"
+        #$.pnotify
+        #  title: "Authorized"
+        #  text: "Already authorized with SteamTracks."
+        #  type: "success"
       else
-        window.open(res,'_blank')
+        Session.set "stracksURL", res

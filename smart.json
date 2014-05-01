@@ -3,7 +3,6 @@
     "bootstrap-3": {},
     "user-status": {},
     "pnotify": {},
-    "dota2": {},
     "font-awesome": {},
     "iron-router-progress": {},
     "iron-router": {
@@ -26,7 +25,6 @@
       "git": "https://github.com/kidovate/meteor-accounts-steam.git",
       "branch": "master"
     },
-    "bootstrap-slider": {},
     "steamtracks": {},
     "moment": {}
   }

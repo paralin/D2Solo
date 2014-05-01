@@ -4,7 +4,6 @@ queueProc = ->
   baseQuery = {'queue.matchFound': false}
   queuing = Meteor.users.find(baseQuery, {fields: {queue: 1, steamtracks: 1}}).fetch()
   for user in queuing
-    continue if _.contains mfound, user._id
     mmr = parseInt user.steamtracks.info.dota2.soloCompetitiveRank
     mmrmax = mmr+user.queue.range
     mmrmin = mmr-user.queue.range

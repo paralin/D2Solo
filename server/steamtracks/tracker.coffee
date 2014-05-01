@@ -109,7 +109,6 @@ Meteor.methods
         status = null
         try
           status = STracks.getSignupStatus user.steamtracks.token
-          console.log status
         catch e
           status = null
         finally

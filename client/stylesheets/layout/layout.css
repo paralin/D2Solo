@@ -51,7 +51,7 @@ body.boxed footer {
   max-width:1170px;
 }
 #header_shadow {
-  background:url('../images/header_shadow.png') no-repeat top center;
+  background:url('https://s3-us-west-2.amazonaws.com/d2solo/header_shadow.png') no-repeat top center;
   position:fixed;
   top:75px; left:0; right:0;
   height:75px; 

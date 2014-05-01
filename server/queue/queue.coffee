@@ -40,6 +40,7 @@ startLobby = (uid, queue)->
       _id: queue.lobbyID
     LobbyStartQueue.insert stats
 
+acceptTimeouts = {}
 Meteor.startup ->
   LobbyStartQueue.remove({})
   Meteor.users.update {}, {$set: {queue: null}}, {multi: true}
@@ -62,16 +63,28 @@ Meteor.startup ->
   Meteor.users.find({'queue.matchFound': true, 'queue.hasStarted': {$exists: false}, 'queue.lobbyPass': {$exists: false}}).observe
     added: (user)->
       console.log "#{user._id} entered waiting to accept state"
+      acceptTimeouts[user._id] = Meteor.setTimeout ->
+        delete acceptTimeouts[user._id]
+        Meteor.users.update {_id: user._id}, {$set: {queue: null, 'queueP': {preventUntil: new Date().getTime()+30000}}}
+        if user.queue.matchUser isnt user._id
+          Meteor.users.update {_id: user.queue.matchUser}, {$set: {queue: {range: 300, matchFound: false}}}
+      , 10000
     changed: (user)->
       match = Meteor.users.findOne _id:user.queue.matchUser
       if user.queue.hasAccepted && !match.queue.lobbyPass?
         console.log "#{user._id} accepted match with #{user.queue.matchUser}"
+        if acceptTimeouts[user._id]?
+          Meteor.clearTimeout acceptTimeouts[user._id]
+          delete acceptTimeouts[user._id]
         if match.queue.hasAccepted
           upd = {'queue.lobbyPass': 'loading', 'queue.lobbyID': Random.id()}
           Meteor.users.update {_id:user._id}, {$set: upd}
           Meteor.users.update {_id:user.queue.matchUser}, {$set: upd}
     removed: (user)->
       console.log "#{user._id} no longer in decision state"
+      if acceptTimeouts[user._id]?
+        Meteor.clearTimeout acceptTimeouts[user._id]
+        delete acceptTimeouts[user._id]
   Meteor.users.find({'queue.matchFound': false, 'status.online': true}, {fields: {queue: 1, status: 1, steamtracks: 1}}).observe
     added: (user)->
       Metrics.update {_id: "queue"}, {$inc: {count: 1}}

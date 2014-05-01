@@ -5,4 +5,7 @@
 #
 # _id: "stats"
 # lobbyCount: number of lobbies ever created successfully
+#
+# _id: "status"
+# text: status text
 @Metrics = new Meteor.Collection "metrics"

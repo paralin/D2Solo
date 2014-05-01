@@ -117,7 +117,8 @@ Meteor.methods
       throw new Meteor.Error 404, "You are not waiting to accept."
     if !user.queue.matchFound
       throw new Meteor.Error 404, "Match has not been found."
-    Meteor.users.update {_id: @userId}, {$set: {'queue.hasAccepted': true}}
+    user.queue.hasAccepted = true
+    Meteor.users.update {_id: user._id}, {$set: {queue: user.queue}}
   "declineMatch": ->
     if !@userId?
       throw new Meteor.Error 403, "You are not logged in."

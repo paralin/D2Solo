@@ -26,6 +26,7 @@
       "branch": "master"
     },
     "steamtracks": {},
-    "moment": {}
+    "moment": {},
+    "fast-render": {}
   }
 }

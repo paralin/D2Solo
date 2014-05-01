@@ -65,10 +65,12 @@ Meteor.startup ->
       console.log "#{user._id} entered waiting to accept state"
       acceptTimeouts[user._id] = Meteor.setTimeout ->
         delete acceptTimeouts[user._id]
+        user = Meteor.users.findOne({_id: user._id})
+        return if user.queue.hasAccepted
         Meteor.users.update {_id: user._id}, {$set: {queue: null, 'queueP': {preventUntil: new Date().getTime()+30000}}}
         if user.queue.matchUser isnt user._id
           Meteor.users.update {_id: user.queue.matchUser}, {$set: {queue: {range: 300, matchFound: false}}}
-      , 10000
+      , 15000
     changed: (user)->
       match = Meteor.users.findOne _id:user.queue.matchUser
       if user.queue.hasAccepted && !match.queue.lobbyPass?

@@ -3,13 +3,11 @@ mmrField = 'steamtracks.info.dota2.soloCompetitiveRank'
 queueProc = ->
   baseQuery = {'queue.matchFound': false}
   queuing = Meteor.users.find(baseQuery, {fields: {queue: 1, steamtracks: 1}}).fetch()
-  mfound = []
   for user in queuing
     continue if _.contains mfound, user._id
     mmr = parseInt user.steamtracks.info.dota2.soloCompetitiveRank
     mmrmax = mmr+user.queue.range
     mmrmin = mmr-user.queue.range
-    #console.log "range #{user.queue.range} mmr #{mmr} max #{mmrmax}"
     query = {$and: []}
     minq = {}
     minq[mmrField] = {$gt: mmrmin}
@@ -22,9 +20,9 @@ queueProc = ->
     match = Meteor.users.findOne query
     if match?
       console.log "match found for #{user._id} (#{mmr}) and #{match._id}(#{match.steamtracks.info.dota2.soloCompetitiveRank})"
-      mfound.push match._id
       Meteor.users.update {_id: user._id}, {$set: {'queue.matchFound': true, 'queue.matchUser': match._id, 'queue.hasAccepted': false}}
       Meteor.users.update {_id: match._id}, {$set: {'queue.matchFound': true, 'queue.matchUser': user._id, 'queue.hasAccepted': false}}
+      return
 doIncRange = ->
   Meteor.users.update {'queue.range': {$lt: 9000}, 'queue': {$exists: true}, 'queue.matchFound': false, 'status.online': true}, {$inc: {'queue.range': 50}}, {multi: true}
 @LobbyStartQueue = new Meteor.Collection "lobbyStartQueue"
@@ -99,7 +97,7 @@ Meteor.startup ->
       Metrics.update {_id: "queue"}, {$inc: {count: -1}}
       console.log "user stopped queueing "+user._id
       #Meteor.users.update {_id: user._id}, {$set: {queue: null}}
-  Meteor.setInterval queueProc, 2000
+  Meteor.setInterval queueProc, 1000
 
 Meteor.methods
   "closeMatch": ->

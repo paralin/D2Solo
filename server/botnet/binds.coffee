@@ -55,19 +55,32 @@
     allowedUsers = []
     allowedUsers.push lobby.user1.services.steam.id
     allowedUsers.push lobby.user2.services.steam.id
-
+  waitInterval = null
   statusUpdate = ->
     status = BotStatus.findOne({_id: b.b.user})
     return if !status? || status.status < 1
     if status.status is 1
-      log "ready"
+      log "Ready to create lobbies"
       return
     if status.status is 2
-      log "launching lobby #{status.lobby._id}"
+      log "Starting lobby #{status.lobby._id}"
       launchLobby status.lobby
     if status.status is 3
-      log "waiting for users to connect"
-      
+      log "Waiting for users to connect..."
+      waitInterval = Meteor.setTimeout ->
+        status = BotStatus.findOne {_id: b.b.user}
+        return if !status? || status.status isnt 3 || !status.lobby?
+        lobby = LobbyStartQueue.findOne {_id: status.lobby._id}
+        return if !lobby?
+        log "lobby #{lobby._id} timed out"
+        d.leavePracticeLobby()
+        BotStatus.update {_id: b.b.user}, {$unset: {lobby: ""}, {$set: {status: 1}}}
+        LobbyStartQueue.update {_id: lobby._id}, {$set: {status: 99}}
+      , 60000
+    else
+      if waitInterval?
+        Meteor.clearTimeout waitInterval
+        waitInterval = null
   BotStatus.find({_id: b.b.user}, {limit: 1}).observe
     added: statusUpdate
     changed: statusUpdate

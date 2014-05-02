@@ -38,11 +38,17 @@ startLobby = (uid, queue)->
     LobbyStartQueue.insert stats
 
 acceptTimeouts = {}
+lobbyStartTimeouts = {}
 Meteor.startup ->
   LobbyStartQueue.remove({})
   Meteor.users.update {}, {$set: {queue: null}}, {multi: true}
   Meteor.setInterval doIncRange, 1000
   queueCount = 0
+  LobbyStartQueue.find({status: 99}).observe
+    added: (lobby)->
+      console.log "lobby #{lobby._id} timed out"
+      LobbyStartQueue.remove {_id: lobby._id}
+      Meteor.users.update {'queue.lobbyID': lobby._id}, {$set: {queue: {matchFound: false, range: 300}}}
   LobbyStartQueue.find({status:3}).observe
     added: (lobby)->
       console.log "lobby #{lobby._id} has begun play"

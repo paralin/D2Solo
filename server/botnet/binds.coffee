@@ -54,6 +54,7 @@
     lobby.user1.queue.region = undefined if lobby.user1.queue.region is "all"
     lobby.user2.queue.region = undefined if lobby.user2.queue.region is "all"
     region = lobby.user1.queue.region || lobby.user2.queue.region || undefined
+    console.log "Launching lobby #{lobby._id}, region #{region}"
     if region?
       switch region
         when "na" then region = Dota2.ServerRegion.USWEST

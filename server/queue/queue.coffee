@@ -65,7 +65,7 @@ Meteor.startup ->
       console.log "lobby launched, password #{lobby.pass}"
   Meteor.users.find({'queue.matchFound': true, 'queue.lobbyPass': 'loading'}).observe
     added: (user)->
-      console.log "#{user._id} loading lobby #{user.queue.lobbyID}"
+      #console.log "#{user._id} loading lobby #{user.queue.lobbyID}"
       startLobby user._id, user.queue
   Meteor.users.find({'queue.matchFound': true, 'queue.hasStarted': {$exists: false}, 'queue.lobbyPass': {$exists: false}}).observe
     added: (user)->
@@ -92,7 +92,7 @@ Meteor.startup ->
           Meteor.users.update {_id:user._id}, {$set: upd}
           Meteor.users.update {_id:user.queue.matchUser}, {$set: upd}
     removed: (user)->
-      console.log "#{user._id} no longer in decision state"
+      #console.log "#{user._id} no longer in decision state"
       if acceptTimeouts[user._id]?
         Meteor.clearTimeout acceptTimeouts[user._id]
         delete acceptTimeouts[user._id]

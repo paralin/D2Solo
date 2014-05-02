@@ -56,7 +56,7 @@
       {{#if currentUser}}
       <p>
       {{#if currentUser.steamtracks.authorized}}
-      {{#unless currentUser.steamtracks.info.level}}
+      {{#unless currentUser.steamtracks.info.dota2.level}}
       Your Dota 2 profile is hidden. Please turn off private mode. SteamTracks will check again in 24 hours.
       {{else}}
       {{#with currentUser.steamtracks.info.dota2}}

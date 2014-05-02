@@ -134,5 +134,5 @@ Template.matchmaking.queueCount = ->
   info.count
 Template.matchmaking.publicProfile = ->
   user = Meteor.user()
-  return false if !user.steamtracks? || !user.steamtracks.dota2?
-  user.steamtracks.info.dota2.privateProfile is '0'
+  return false if !user? || !user.steamtracks?
+  user.steamtracks.info.dota2.privateProfile is "0"

@@ -23,7 +23,7 @@ checkChanges = ->
       ch.dota2.soloCompetitiveRank = parseInt ch.dota2.soloCompetitiveRank
     _.deepExtend user.steamtracks.info, ch
     Meteor.users.update {_id: user._id}, {$set: {steamtracks: user.steamtracks}}
-    console.log " --> #{(parseInt sid)}"
+    #console.log " --> #{(parseInt sid)}"
 Meteor.startup ->
   checkChanges()
   Meteor.setInterval checkChanges, 60000*10

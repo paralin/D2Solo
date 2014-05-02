@@ -74,7 +74,7 @@
         return if !lobby?
         log "lobby #{lobby._id} timed out"
         d.leavePracticeLobby()
-        BotStatus.update {_id: b.b.user}, {$unset: {lobby: ""}, {$set: {status: 1}}}
+        BotStatus.update {_id: b.b.user}, {$unset: {lobby: ""}, $set: {status: 1}}
         LobbyStartQueue.update {_id: lobby._id}, {$set: {status: 99}}
       , 60000
     else

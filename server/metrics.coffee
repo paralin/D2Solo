@@ -23,7 +23,7 @@ Meteor.startup ->
   Metrics.insert
     _id: "pusers"
     count: 0
-  Meteor.users.find({'status.online': true, 'queue.matchFound': true}, {fields: {_id: 1}}).observeChanges
+  Meteor.users.find({'status.online': true, $or: [{'queue.matchFound': true}, {'steamtracks.info.gameServerIp': {$ne: null}}]}, {fields: {_id: 1}}).observeChanges
     added: ->
       Metrics.update {_id: "pusers"}, {$inc: {count: 1}}
     removed: ->

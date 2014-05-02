@@ -8,4 +8,7 @@
 #
 # _id: "status"
 # text: status text
+#
+# _id: "users"
+# count: user count
 @Metrics = new Meteor.Collection "metrics"

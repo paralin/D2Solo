@@ -60,14 +60,13 @@
     status = BotStatus.findOne({_id: b.b.user})
     return if !status? || status.status < 1
     if status.status is 1
-      console.log "bot #{status._id} ready"
+      log "ready"
       return
     if status.status is 2
-      console.log "bot #{status._id} launching lobby #{status.lobby._id}"
+      log "launching lobby #{status.lobby._id}"
       launchLobby status.lobby
     if status.status is 3
-      console.log "bot #{status._id} waiting for users to connect"
-      #at this point system is waiting for LobbyStartQueue status -> 3
+      log "waiting for users to connect"
       
   BotStatus.find({_id: b.b.user}, {limit: 1}).observe
     added: statusUpdate

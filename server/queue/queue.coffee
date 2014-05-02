@@ -50,7 +50,8 @@ Meteor.startup ->
     added: (lobby)->
       console.log "lobby #{lobby._id} timed out"
       LobbyStartQueue.remove {_id: lobby._id}
-      Meteor.users.update {'queue.lobbyID': lobby._id}, {$set: {queue: {matchFound: false, range: 300}}}
+      Meteor.users.update {_id: lobby.user1._id}, {$set: {queue: {matchFound: false, range: 300, region: lobby.user1.queue.region}}}
+      Meteor.users.update {_id: lobby.user2._id}, {$set: {queue: {matchFound: false, range: 300, region: lobby.user2.queue.region}}}
   LobbyStartQueue.find({status:3}).observe
     added: (lobby)->
       console.log "lobby #{lobby._id} has begun play"
@@ -73,9 +74,10 @@ Meteor.startup ->
         delete acceptTimeouts[user._id]
         user = Meteor.users.findOne({_id: user._id})
         return if user.queue.hasAccepted
-        Meteor.users.update {_id: user._id}, {$set: {queue: null, 'queueP': {preventUntil: new Date().getTime()+30000}}}
+        Meteor.users.update {_id: user._id}, {$unset: {queue: ''}, $set: {'queueP': {preventUntil: new Date().getTime()+30000}}}
         if user.queue.matchUser isnt user._id
-          Meteor.users.update {_id: user.queue.matchUser}, {$set: {queue: {range: 300, matchFound: false}}}
+          match = Meteor.users.findOne({_id: user.queue.matchUser})
+          Meteor.users.update {_id: user.queue.matchUser}, {$set: {queue: {range: 300, matchFound: false, region: match.queue.region}}}
       , 15000
     changed: (user)->
       match = Meteor.users.findOne _id:user.queue.matchUser
@@ -136,14 +138,15 @@ Meteor.methods
       throw new Meteor.Error 404, "You are not waiting to accept."
     if !user.queue.matchFound
       throw new Meteor.Error 404, "Match has not been found."
-    Meteor.users.update {_id: @userId}, {$set: {queue: null, 'queueP': {preventUntil: new Date().getTime()+30000}}}
+    Meteor.users.update {_id: @userId}, {$unset: {'queue': ''}, $set: {'queueP': {preventUntil: new Date().getTime()+30000}}}
     if user.queue.matchUser isnt user._id
-      Meteor.users.update {_id: user.queue.matchUser}, {$set: {queue: {range: 300, matchFound: false}}}
+      match = Meteor.users.findOne({_id: user.queue.matchUser})
+      Meteor.users.update {_id: match._id}, {$set: {queue: {range: 300, matchFound: false, region: match.queue.region}}}
   "stopQueue": ->
     return if !@userId?
     user = Meteor.users.findOne _id:@userId
     return if !user.queue?
-    Meteor.users.update {_id: @userId}, {$set: {queue: null}}
+    Meteor.users.update {_id: @userId}, {$unset: {queue: ''}}
   "startQueuing": (region)->
     if !region? || !Regions[region]?
       region = "all"

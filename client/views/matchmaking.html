@@ -27,7 +27,7 @@
         {{>userCard currentUser._id}}
         {{>userCard currentUser.queue.matchUser}}
         {{#if currentUser.queue.hasStarted}}
-        <div style="font-weight:bold;text-align:center;margin-top:170px" class="center-block">Game has started! <button class="closeMatch btn btn-info">Close</button></div>
+        <div style="font-weight:bold;text-align:center;margin-top:170px" class="center-block">Lobby ready, host click Start Game! <button class="closeMatch btn btn-info">Close</button></div>
         {{else}}
         {{#if lobbyPass}}
         <div style="font-weight: bold;text-align:center;margin-top:170px" class="center-block">Lobby is ready, password "{{lobbyPass}}".</div>

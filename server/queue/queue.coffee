@@ -78,7 +78,7 @@ Meteor.startup ->
         if user.queue.matchUser isnt user._id
           match = Meteor.users.findOne({_id: user.queue.matchUser})
           Meteor.users.update {_id: user.queue.matchUser}, {$set: {queue: {range: 300, matchFound: false, region: match.queue.region}}}
-      , 15000
+      , 20000
     changed: (user)->
       match = Meteor.users.findOne _id:user.queue.matchUser
       return if !user.queue? || !match.queue?

@@ -56,9 +56,7 @@
       {{#if currentUser}}
       <p>
       {{#if currentUser.steamtracks.authorized}}
-      {{#unless currentUser.steamtracks.info.dota2.level}}
-      Your Dota 2 profile is hidden. Please turn off private mode. SteamTracks will check again in 24 hours.
-      {{else}}
+      {{#if currentUser.steamtracks.info.dota2.level}}
       {{#with currentUser.steamtracks.info.dota2}}
       {{#unless soloCompetitiveRank}}
       You do not have your solo ranked MMR yet. Please play your calibration matches and get your MMR ranking. Please note that SteamTracks updates every 24 hours.
@@ -66,7 +64,9 @@
       You have linked SteamTracks, your current solo MMR (used on D2Solo) is <b>{{currentUser.steamtracks.info.dota2.soloCompetitiveRank}}</b>.
       {{/unless}}
       {{/with}}
-      {{/unless}}
+      {{else}}
+      Your Dota2 profile is probably private. Please make it public and wait for SteamTracks to update (24 hours).
+      {{/if}}
       {{else}}
       You have not linked SteamTracks yet. <a href={{steamTracks}} id="startSTracksAuth" target="_blank" class="btn btn-success">Link SteamTracks</a>
       {{/if}}

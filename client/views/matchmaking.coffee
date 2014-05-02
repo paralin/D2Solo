@@ -7,11 +7,16 @@ Template.matchmaking.preventTime = ->
   return if !user?
   moment(user.queueP.preventUntil).format "h:mm:ss a"
 Template.regionSel.region = ->
+  info = Metrics.findOne(_id: "queue")
+  return if !info?
+  delete info["count"]
+  delete info["_id"]
   results = []
   for id, region of Regions
     results.push
       id: id
       name: region
+      count: info[id]
   results
 Template.regionSel.rendered = ->
   $("#regionsel").val Session.get "region"

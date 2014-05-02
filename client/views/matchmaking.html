@@ -56,7 +56,7 @@
       {{#if currentUser}}
       <p>
       {{#if currentUser.steamtracks.authorized}}
-      {{#if currentUser.steamtracks.info.dota2.level}}
+      {{#if publicProfile}}
       {{#with currentUser.steamtracks.info.dota2}}
       {{#unless soloCompetitiveRank}}
       You do not have your solo ranked MMR yet. Please play your calibration matches and get your MMR ranking. Please note that SteamTracks updates every 24 hours.

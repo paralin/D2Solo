@@ -27,7 +27,7 @@ Meteor.startup ->
     added: ->
       Metrics.update {_id: "pusers"}, {$inc: {count: 1}}
     removed:
-      Metrics.update {_id: "pusers"}, {$inc: {count: -1}}
+      Metrics.update {_id: "pusers", count: {$gt: 0}}, {$inc: {count: -1}}
 @incLobbyCount = ->
   Metrics.update {_id: "stats"}, {$inc: {lobbyCount: 1}}
 

@@ -23,7 +23,7 @@ queueProc = ->
       Meteor.users.update {_id: match._id}, {$set: {'queue.matchFound': true, 'queue.matchUser': user._id, 'queue.hasAccepted': false}}
       return
 doIncRange = ->
-  Meteor.users.update {'queue.range': {$lt: 1000}, 'queue': {$exists: true}, 'queue.matchFound': false, 'status.online': true}, {$inc: {'queue.range': 25}}, {multi: true}
+  Meteor.users.update {'queue.range': {$lt: 3000}, 'queue': {$exists: true}, 'queue.matchFound': false, 'status.online': true}, {$inc: {'queue.range': 25}}, {multi: true}
 @LobbyStartQueue = new Meteor.Collection "lobbyStartQueue"
 startLobby = (uid, queue)->
   stats = LobbyStartQueue.findOne {_id: queue.lobbyID}

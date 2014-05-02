@@ -30,7 +30,7 @@
         <div style="font-weight:bold;text-align:center;margin-top:170px" class="center-block">Lobby ready, host click Start Game! <button class="closeMatch btn btn-info">Close</button></div>
         {{else}}
         {{#if lobbyPass}}
-        <div style="font-weight: bold;text-align:center;margin-top:170px" class="center-block">Lobby is ready, password "{{lobbyPass}}".</div>
+        <div style="font-weight: bold;text-align:center;margin-top:170px" class="center-block">Lobby is ready, password "{{lobbyPass}}" <i class="fa fa-clipboard" style="color:green;padding-left:5px;font-size:1.3em"></i></div>
         {{else}}
         {{#if currentUser.queue.hasAccepted}}
         <div style="text-align:center;margin-top:170px" class="center-block">You have accepted, please wait...</div>

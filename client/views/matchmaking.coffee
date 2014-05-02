@@ -20,6 +20,11 @@ Template.regionSel.events
     Session.set "region", $("#regionsel").val()
     console.log Session.get "region"
 Template.matchmaking.events
+  "click .fa-clipboard": ->
+    user = Meteor.user()
+    return if !user? || !user.queue? || !user.queue.lobbyPass? || user.queue.lobbyPass is "loading"
+    pass = user.queue.lobbyPass
+    window.prompt("Copy to clipboard: Ctrl+C, Enter", pass)
   "click .closeMatch": ->
     Meteor.call "closeMatch", (err, res)->
       if err?

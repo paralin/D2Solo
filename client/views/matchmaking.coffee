@@ -33,7 +33,7 @@ Template.matchmaking.events
           startSteamtracksAuth()
           $.pnotify
             title: "SteamTracks Auth"
-            text: "Please complete the pop-up steamtracks authorization."
+            text: "Please click 'Link SteamTracks' and complete the auth."
             type: "info"
         else
           $.pnotify

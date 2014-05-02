@@ -26,7 +26,7 @@ Meteor.startup ->
   Meteor.users.find({'status.online': true, 'queue.matchFound': true}, {fields: {_id: 1}}).observeChanges
     added: ->
       Metrics.update {_id: "pusers"}, {$inc: {count: 1}}
-    removed:
+    removed: ->
       Metrics.update {_id: "pusers", count: {$gt: 0}}, {$inc: {count: -1}}
 @incLobbyCount = ->
   Metrics.update {_id: "stats"}, {$inc: {lobbyCount: 1}}

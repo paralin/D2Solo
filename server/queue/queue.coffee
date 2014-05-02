@@ -18,7 +18,6 @@ queueProc = ->
     if user.queue.region isnt "all"
       query["queue.region"] = user.queue.region
     _.extend query, baseQuery
-    console.log JSON.stringify query
     match = Meteor.users.findOne query
     if match?
       console.log "match found for #{user._id} (#{mmr}) and #{match._id}(#{match.steamtracks.info.dota2.soloCompetitiveRank})"

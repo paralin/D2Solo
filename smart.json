@@ -27,6 +27,7 @@
     },
     "steamtracks": {},
     "moment": {},
-    "fast-render": {}
+    "fast-render": {},
+    "buzz.js": {}
   }
 }

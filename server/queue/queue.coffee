@@ -40,12 +40,12 @@ startLobby = (uid, queue)->
     LobbyStartQueue.insert stats
 
 acceptTimeouts = {}
+userRegions = {}
 lobbyStartTimeouts = {}
 Meteor.startup ->
   LobbyStartQueue.remove({})
   Meteor.users.update {}, {$set: {queue: null}}, {multi: true}
   Meteor.setInterval doIncRange, 1000
-  queueCount = 0
   LobbyStartQueue.find({status: 99}).observe
     added: (lobby)->
       console.log "lobby #{lobby._id} timed out"
@@ -92,20 +92,23 @@ Meteor.startup ->
           Meteor.users.update {_id:user._id}, {$set: upd}
           Meteor.users.update {_id:user.queue.matchUser}, {$set: upd}
     removed: (user)->
-      #console.log "#{user._id} no longer in decision state"
       if acceptTimeouts[user._id]?
         Meteor.clearTimeout acceptTimeouts[user._id]
         delete acceptTimeouts[user._id]
   Meteor.users.find({'queue.matchFound': false, 'status.online': true}, {fields: {queue: 1, status: 1, steamtracks: 1}}).observe
     added: (user)->
-      Metrics.update {_id: "queue"}, {$inc: {count: 1}}
+      upd = {count:1}
+      upd[user.queue.region] = 1
+      Metrics.update {_id: "queue"}, {$inc: upd}
+      userRegions[user._id] = user.queue.region
       console.log "Start queue: "+user._id+" Region: "+user.queue.region
-      queueCount++
     removed: (user)->
-      queueCount--
-      Metrics.update {_id: "queue"}, {$inc: {count: -1}}
-      console.log "user stopped queueing "+user._id
-      #Meteor.users.update {_id: user._id}, {$set: {queue: null}}
+      upd = {count: -1}
+      region = userRegions[user._id]
+      if region?
+        upd[region] = -1
+      Metrics.update {_id: "queue"}, {$inc:upd}
+      console.log "Exit queue pool: "+user._id
   Meteor.setInterval queueProc, 1000
 
 Meteor.methods

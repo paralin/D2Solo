@@ -19,7 +19,7 @@
           </div>
         </div>
         {{#unless currentUser.queue.matchFound}}
-        There are currently <b>{{queueCount}}</b> players searching (in all regions).<br>
+        <b>Total:</b> {{queueCount}}{{#each queueMetrics}} <b>{{name}}</b>: {{count}}{{/each}}<br>
         Your search range is currently <b>{{searchRange}}</b> MMR.<br/>
         <button class="stopQueue btn btn-danger center-block" style="margin-top:5px">Stop Queuing</button>
         {{else}}

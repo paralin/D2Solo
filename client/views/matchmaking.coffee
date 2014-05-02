@@ -136,3 +136,14 @@ Template.matchmaking.publicProfile = ->
   user = Meteor.user()
   return false if !user? || !user.steamtracks?
   user.steamtracks.info.dota2.privateProfile is "0"
+Template.matchmaking.queueMetrics = ->
+  info = Metrics.findOne(_id: "queue")
+  return if !info?
+  delete info["count"]
+  delete info["_id"]
+  result = []
+  for id, count of info
+    result.push
+      name: Regions[id]
+      count: count
+  result

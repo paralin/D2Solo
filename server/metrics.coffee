@@ -1,8 +1,11 @@
 Meteor.startup ->
   Metrics.remove({_id: "queue"})
-  Metrics.insert
+  queueMetric =
     _id: "queue"
     count: 0
+  for id of Regions
+    queueMetric[id] = 0
+  Metrics.insert queueMetric
   if !Metrics.findOne({_id:"stats"})?
     Metrics.insert
       _id: "stats"

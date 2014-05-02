@@ -51,7 +51,15 @@
   launchLobby = (lobby)->
     password = randomWords({exactly: 2, join: ' '})
     d.leavePracticeLobby()
-    d.createPracticeLobby "D2SOLO #{lobby.user1.services.steam.username} vs. #{lobby.user2.services.steam.username}", password, undefined, Dota2.GameMode.DOTA_GAMEMODE_MO
+    lobby.user1.queue.region = undefined if lobby.user1.queue.region is "all"
+    lobby.user2.queue.region = undefined if lobby.user2.queue.region is "all"
+    region = lobby.user1.queue.region || lobby.user2.queue.region || undefined
+    if region?
+      switch region
+        when "na" then region = Dota2.ServerRegion.USWEST
+        when "eu" then region = Dota2.ServerRegion.EUROPE
+        when "aus" then region = Dota2.ServerRegion.AUSTRALIA
+    d.createPracticeLobby "D2SOLO #{lobby.user1.services.steam.username} vs. #{lobby.user2.services.steam.username}", password, region, Dota2.GameMode.DOTA_GAMEMODE_MO
     allowedUsers = []
     allowedUsers.push lobby.user1.services.steam.id
     allowedUsers.push lobby.user2.services.steam.id

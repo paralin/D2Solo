@@ -19,7 +19,7 @@
           </div>
         </div>
         {{#unless currentUser.queue.matchFound}}
-        There are currently <b>{{queueCount}}</b> players queuing for a match.<br>
+        There are currently <b>{{queueCount}}</b> players searching (in all regions).<br>
         Your search range is currently <b>{{searchRange}}</b> MMR.<br/>
         <button class="stopQueue btn btn-danger center-block" style="margin-top:5px">Stop Queuing</button>
         {{else}}
@@ -51,7 +51,7 @@
     <div class="col-sm-4 desc-box">
       <h4 class="page-header">Queuing</h4>
       <p>
-      The system will search for another user close to your current Dota 2 solo skill level. SteamTracks (also used on D2TeamMM and Dota2TopList) is responsible for updating your solo rating and thus needs to be linked to D2Solo to queue in matchmaking. You must therefore also have your 10 solo calibration games played and NOT have a private profile to start playing on D2Solo. SteamTracks updates every 24 hours.
+      SteamTracks is responsible for updating your solo rating and needs to be linked to D2Solo to queue in matchmaking. You must have your 10 solo calibration games played and NOT have a private profile to start playing on D2Solo. SteamTracks updates every 24 hours.
       </p>
       {{#if currentUser}}
       <p>
@@ -76,6 +76,9 @@
       </p>
       {{/if}}
       </p>
+      <p>
+      {{>regionSel}}
+      </p>
       {{else}}
       <p>
       You need to sign in before you can begin queuing.
@@ -97,4 +100,11 @@
   </div>
   {{/if}}
 </div>
+</template>
+<template name="regionSel">
+<select id="regionsel" class="form-control">
+  {{#each region}}
+  <option value={{id}}>{{name}}</option>
+  {{/each}}
+</select>
 </template>

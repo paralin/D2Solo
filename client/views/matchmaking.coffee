@@ -1,7 +1,24 @@
+Meteor.startup ->
+  region = Session.get "region"
+  return if region?
+  Session.set "region", "all"
 Template.matchmaking.preventTime = ->
   user = Meteor.user()
   return if !user?
   moment(user.queueP.preventUntil).format "h:mm:ss a"
+Template.regionSel.region = ->
+  results = []
+  for id, region of Regions
+    results.push
+      id: id
+      name: region
+  results
+Template.regionSel.rendered = ->
+  $("#regionsel").val Session.get "region"
+Template.regionSel.events
+  "change #regionsel": ->
+    Session.set "region", $("#regionsel").val()
+    console.log Session.get "region"
 Template.matchmaking.events
   "click .closeMatch": ->
     Meteor.call "closeMatch", (err, res)->
@@ -27,7 +44,10 @@ Template.matchmaking.events
   "click .stopQueue": ->
     Meteor.call "stopQueue"
   "click #startQueuing": ->
-    Meteor.call "startQueuing", (err,res)->
+    region = Session.get "region"
+    if !Regions[region]?
+      region = "all"
+    Meteor.call "startQueuing", region, (err,res)->
       if err?
         if err.error is 402
           startSteamtracksAuth()

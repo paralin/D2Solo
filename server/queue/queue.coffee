@@ -1,7 +1,7 @@
 mmrField = 'steamtracks.info.dota2.soloCompetitiveRank'
 
 queueProc = ->
-  baseQuery = {'queue.matchFound': false}
+  baseQuery = {'queue.matchFound': false, 'status.online': true}
   queuing = Meteor.users.find(baseQuery, {fields: {queue: 1, steamtracks: 1}}).fetch()
   for user in queuing
     mmr = parseInt user.steamtracks.info.dota2.soloCompetitiveRank
@@ -15,7 +15,10 @@ queueProc = ->
     query['$and'].push(minq)
     query['$and'].push(maxq)
     query._id = {$ne: user._id}
+    if user.queue.region isnt "all"
+      query["queue.region"] = user.queue.region
     _.extend query, baseQuery
+    console.log JSON.stringify query
     match = Meteor.users.findOne query
     if match?
       console.log "match found for #{user._id} (#{mmr}) and #{match._id}(#{match.steamtracks.info.dota2.soloCompetitiveRank})"
@@ -95,7 +98,7 @@ Meteor.startup ->
   Meteor.users.find({'queue.matchFound': false, 'status.online': true}, {fields: {queue: 1, status: 1, steamtracks: 1}}).observe
     added: (user)->
       Metrics.update {_id: "queue"}, {$inc: {count: 1}}
-      console.log "new user "+user._id+" queueing"
+      console.log "Start queue: "+user._id+" Region: "+user.queue.region
       queueCount++
     removed: (user)->
       queueCount--
@@ -142,7 +145,9 @@ Meteor.methods
     user = Meteor.users.findOne _id:@userId
     return if !user.queue?
     Meteor.users.update {_id: @userId}, {$set: {queue: null}}
-  "startQueuing": ->
+  "startQueuing": (region)->
+    if !region? || !Regions[region]?
+      region = "all"
     if !@userId?
       throw new Meteor.Error 403, "You must be logged into start queueing."
     user = Meteor.users.findOne _id: @userId
@@ -162,4 +167,4 @@ Meteor.methods
         throw new Meteor.Error 403, "You are prevented from matchmaking for 30 seconds."
       else
         Meteor.users.update {_id:user._id}, {$unset: {queueP: ''}}
-    Meteor.users.update({_id: @userId}, {$set: {queue: {matchFound: false, range: 50}}})
+    Meteor.users.update({_id: @userId}, {$set: {queue: {matchFound: false, range: 50, region: region}}})

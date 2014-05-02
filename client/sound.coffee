@@ -7,4 +7,5 @@ Meteor.startup ->
     queue = user.queue
     return if !queue?
     return if !queue.matchFound? || !queue.matchFound
+    return if queue.hasAccepted
     matchFoundSound.play()

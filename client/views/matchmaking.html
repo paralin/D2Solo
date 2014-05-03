@@ -57,7 +57,7 @@
       <p>
       {{#if currentUser.steamtracks.authorized}}
       {{#unless infoValid}}
-      For some reason, SteamTracks has given D2Solo empty data for your account. It will update again within half an hour. Please check SteamTracks to make sure your account has some data.
+      SteamTracks failed to fetch Dota 2 data for your account. This is probably due to Steam downtime during SteamTracks' attempted fetch. D2Solo can't do anything about this lack of data and can't queue you due to lack of MMR data. You should check back in 24 hours after SteamTracks has made the update attempt again. Remember to keep its bot on your friends list and use a public Dota 2 profile.
       {{else}}
       {{#if publicProfile}}
       {{#with currentUser.steamtracks.info.dota2}}

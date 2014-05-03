@@ -20,11 +20,12 @@ offlinePeriodic = null
   b.s.on 'error', (e)->
     if e.cause is "logonFail"
       rmeteor onLoggedOff
-    offlinePeriodic = Meteor.setTimeout ->
-      b.s.logOn
-        accountName: b.b.user
-        password: b.b.pass
-    , 30000
+    rmeteor ->
+      offlinePeriodic = Meteor.setTimeout ->
+        b.s.logOn
+          accountName: b.b.user
+          password: b.b.pass
+      , 30000
     log "error "+e.cause
     rmeteor ->
       BotStatus.remove {_id: b.b.user}
@@ -48,7 +49,8 @@ offlinePeriodic = null
     log sid+" ("+cid+"): "+msg
   b.s.on 'loggedOn', ->
     if offlinePeriodic?
-      Meteor.clearTimeout offlinePeriodic
+      rmeteor ->
+        Meteor.clearTimeout offlinePeriodic
       offlinePeriodic = null
     log "logged in"
     b.s.setPersonaState(Steam.EPersonaState.Online)

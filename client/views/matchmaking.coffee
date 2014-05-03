@@ -139,6 +139,10 @@ Template.matchmaking.searchRange = ->
 Template.matchmaking.queueCount = ->
   info = Metrics.findOne(_id: "queue")
   info.count
+Template.matchmaking.infoValid = ->
+  user = Meteor.user()
+  return false if !user? || !user.steamtracks?
+  user.steamtracks.info.dota2.privateProfile?
 Template.matchmaking.publicProfile = ->
   user = Meteor.user()
   return false if !user? || !user.steamtracks?

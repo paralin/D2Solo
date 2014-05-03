@@ -56,6 +56,9 @@
       {{#if currentUser}}
       <p>
       {{#if currentUser.steamtracks.authorized}}
+      {{#unless infoValid}}
+      For some reason, SteamTracks has given D2Solo empty data for your account. It will update again within half an hour. Please check SteamTracks to make sure your account has some data.
+      {{else}}
       {{#if publicProfile}}
       {{#with currentUser.steamtracks.info.dota2}}
       {{#unless soloCompetitiveRank}}
@@ -67,6 +70,7 @@
       {{else}}
       Your Dota2 profile is private. Please make it public and wait for SteamTracks to update (24 hours).<br>
       {{/if}}
+      {{/unless}}
       {{else}}
       You have not linked SteamTracks yet. <a href={{steamTracks}} id="startSTracksAuth" target="_blank" class="btn btn-success">Link SteamTracks</a>
       {{/if}}

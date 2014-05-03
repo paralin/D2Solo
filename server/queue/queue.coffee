@@ -15,7 +15,7 @@ queueProc = ->
     query['$and'].push(minq)
     query['$and'].push(maxq)
     query._id = {$ne: user._id}
-    if user.queue.region isnt "all"
+    if user.queue.region isnt "all" || !user.queue.region?
       query["queue.region"] = user.queue.region
     _.extend query, baseQuery
     match = Meteor.users.findOne query

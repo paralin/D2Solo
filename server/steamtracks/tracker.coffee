@@ -9,10 +9,10 @@ fetchInfo = (user)->
   res = STracks.userInfo id
   Meteor.users.update {_id: user._id}, {$set: {'steamtracks.id32': id, 'steamtracks.info': res}}
 Meteor.startup ->
-  Meteor.users.update({'steamtracks.authorized': true, 'steamtracks.id32': {$exists: false}}, {$unset: {steamtracks: ''}})
-  Meteor.users.find({'steamtracks.authorized': true, 'steamtracks.info.dota2.privateProfile': null}).observe
-    added: fetchInfo
-    changed: fetchInfo
+  #Meteor.users.update({'steamtracks.authorized': true, 'steamtracks.id32': {$exists: false}}, {$unset: {steamtracks: ''}})
+  #Meteor.users.find({'steamtracks.authorized': true, 'steamtracks.info.dota2.privateProfile': null}).observe
+  #added: fetchInfo
+  #changed: fetchInfo
 ### Track Changes ###
 checkChanges = ->
   console.log "updating SteamTracks data"

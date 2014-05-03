@@ -5,8 +5,9 @@ lastCheck = 0
 ### Check Newbies ###
 fetchInfo = (user)->
   console.log "attempting full fetch for "+user._id
-  res = STracks.userInfo user.steamtracks.id32
-  Meteor.users.update {_id: user._id}, {$set: {'steamtracks.info': res}}
+  id = toSteamID32 user.services.steam.id
+  res = STracks.userInfo id
+  Meteor.users.update {_id: user._id}, {$set: {'steamtracks.id32': id, 'steamtracks.info': res}}
 Meteor.startup ->
   Meteor.users.find({'steamtracks.authorized': true, 'steamtracks.info.dota2.privateProfile': null}).observe
     added: fetchInfo

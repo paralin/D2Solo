@@ -1,5 +1,13 @@
+offlinePeriodic = null
 @randomWords = Meteor.require('random-words')
 @sbinds = (b)->
+  onLoggedOff = ->
+    BotStatus.update {_id: b.b.user}, {$set: {status: 0}}
+    status = BotStatus.findOne {_id: b.b.user}
+    return if !status? || !status.lobby?
+    lobby = LobbyStartQueue.findOne {_id: status.lobby._id}
+    return if !lobby?
+    LobbyStartQueue.update {_id: lobby._id}, {$set: {status: 0}}
   log = (msg)->
     console.log "["+b.b.user+"] "+msg
   handleFriend = (sid, rel)->
@@ -10,11 +18,20 @@
       when Steam.EFriendRelationship.None
         log sid+" removed us :("
   b.s.on 'error', (e)->
+    if e.cause is "logonFail"
+      rmeteor onLoggedOff
+    offlinePeriodic = Meteor.setTimeout ->
+      b.s.logOn
+        accountName: b.b.user
+        password: b.b.pass
+    , 30000
     log "error "+e.cause
     rmeteor ->
       BotStatus.remove {_id: b.b.user}
   b.s.on 'loggedOff', ->
     log "logged off, steam went down"
+    if e.cause is "logonFail"
+      rmeteor onLoggedOff
   b.s.on 'chatInvite', (cid, name, sid)->
     log sid+" invited us to chat "+name+ "("+cid+")"
   b.s.on 'friendMsg', (sid, msg, mtyp)->
@@ -30,6 +47,9 @@
     return if msg is ""
     log sid+" ("+cid+"): "+msg
   b.s.on 'loggedOn', ->
+    if offlinePeriodic?
+      Meteor.clearTimeout offlinePeriodic
+      offlinePeriodic = null
     log "logged in"
     b.s.setPersonaState(Steam.EPersonaState.Online)
     b.s.setPersonaName b.b.name
@@ -68,6 +88,8 @@
   statusUpdate = ->
     status = BotStatus.findOne({_id: b.b.user})
     return if !status? || status.status < 1
+    if status.status is 0
+      log "Bot offline."
     if status.status is 1
       log "Ready to create lobbies"
       return

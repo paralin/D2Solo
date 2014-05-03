@@ -54,6 +54,13 @@ startBot = (bot)->
   sbinds clients[bot.user]
   dbinds clients[bot.user]
 
+botCount = 0
+updateStatusMsg = ->
+  msg = Metrics.findOne {_id: "status"}
+  if botCount is 0 && !msg?
+    Metrics.insert {_id: "status", message: "All bots are offline. Steam might be down.", auto: true}
+  else if msg? && botCount > 0 && msg.auto
+    Metrics.remove {_id: "status"}
 Meteor.startup ->
   LobbyStartQueue.find({status: 0}).observe
     added: startLobby
@@ -64,3 +71,11 @@ Meteor.startup ->
     added: startBot
     changed: updateBot
     removed: shutdownBot
+  BotStatus.find({status: {$gt: 0}}).observeChanges
+    added: ->
+      botCount++
+      updateStatusMsg()
+    removed: ->
+      botCount--
+      updateStatusMsg()
+  updateStatusMsg()

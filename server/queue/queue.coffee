@@ -165,9 +165,13 @@ Meteor.methods
       throw new Meteor.Error 402, "You must be linked to SteamTracks."
     if !user.steamtracks.info?
       throw new Meteor.Error 403, "We don't have your SteamTracks info yet. Please wait a little while."
-    if user.steamtracks.info.dota2.privateProfile is '1'
+    if !user.steamtracks.info.dota2.privateProfile?
+      if !user.steamtracks.info.dota2.soloCompetitiveRank?
+        console.log "user #{@userId} has null data, filling in 3k mmr"
+        Meteor.users.update {_id: @userId}, {$set: {'steamtracks.info.dota2.soloCompetitiveRank': 3000}}
+    else if user.steamtracks.info.dota2.privateProfile is '1'
       throw new Meteor.Error 403, "Your profile is private, please make it public (in Dota2)."
-    if !user.steamtracks.info.dota2.soloCompetitiveRank?
+    else if !user.steamtracks.info.dota2.soloCompetitiveRank?
       throw new Meteor.Error 403, "You have not finished your calibration games for solo MMR yet."
     if user.queueP?
       if user.queueP.preventUntil > new Date().getTime()

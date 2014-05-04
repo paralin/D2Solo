@@ -31,8 +31,7 @@ offlinePeriodic = null
       BotStatus.remove {_id: b.b.user}
   b.s.on 'loggedOff', ->
     log "logged off, steam went down"
-    if e.cause is "logonFail"
-      rmeteor onLoggedOff
+    rmeteor onLoggedOff
   b.s.on 'chatInvite', (cid, name, sid)->
     log sid+" invited us to chat "+name+ "("+cid+")"
   b.s.on 'friendMsg', (sid, msg, mtyp)->

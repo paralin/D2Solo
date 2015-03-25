@@ -1,6 +1,6 @@
-@Steam = Meteor.require "steam"
-@Dota2 = Meteor.require "dota2"
-@Fiber = Meteor.require "fibers"
+@Steam = Meteor.npmRequire "steam"
+@Dota2 = Meteor.npmRequire "dota2"
+@Fiber = Meteor.npmRequire "fibers"
 
 @AccountID = (steamID)->
   Dota2.Dota2Client::ToAccountID(steamID)

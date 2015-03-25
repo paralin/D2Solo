@@ -4,7 +4,7 @@
 Meteor.startup ->
   BotStatus.remove({})
   BotDB.remove({})
-  if !process.env.NO_RUN_BOTS?
+  #if !process.env.NO_RUN_BOTS?
     # BotDB.insert
     #  user: "username"
     #  pass: "password"

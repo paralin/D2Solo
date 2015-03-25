@@ -1,5 +1,5 @@
 offlinePeriodic = null
-@randomWords = Meteor.require('random-words')
+@randomWords = Meteor.npmRequire('random-words')
 @sbinds = (b)->
   onLoggedOff = ->
     BotStatus.update {_id: b.b.user}, {$set: {status: 0}}

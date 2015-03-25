@@ -1,4 +1,4 @@
-@steamidconvert = (Meteor.require "steamidconvert")()
+@steamidconvert = (Meteor.npmRequire "steamidconvert")()
 @STracks = new SteamTracks "6KRhiKRF5nF3QYtcoLZW", "Jkecd05f90R17VVFpyxiClWQa9ZEDb67RwmXGFdC", false
 lastCheck = 0
 
